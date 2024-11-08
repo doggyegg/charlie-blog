@@ -1,0 +1,46 @@
+{
+	"name": "charlie-blog",
+	"version": "1.0.0",
+	"description": "The blog project of Charlie-Chen",
+	"main": "index.js",
+	"scripts": {
+		"lint": "eslint",
+		"prepare": "husky"
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-customizable"
+		}
+	},
+	"keywords": [],
+	"author": "charlie-chen",
+	"license": "ISC",
+	"dependencies": {
+		"@ant-design/icons": "^5.3.1",
+		"antd": "^5.15.2",
+		"big.js": "^6.2.1",
+		"commitizen": "^4.3.0",
+		"dayjs": "^1.11.11",
+		"element-plus": "^2.6.1",
+		"lodash": "^4.17.21"
+	},
+	"devDependencies": {
+		"@babel/eslint-parser": "^7.24.5",
+		"@commitlint/cli": "19.2.0",
+		"@typescript-eslint/eslint-plugin": "^6.0.0",
+		"@typescript-eslint/parser": "^6.0.0",
+		"cz-customizable": "^7.1.0",
+		"eslint": "^7.3.0",
+		"eslint-config-prettier": "^9.0.0",
+		"husky": "^9.0.11",
+		"lint-staged": "^15.2.2",
+		"sass": "^1.71.1",
+		"sass-loader": "^14.1.1",
+		"axios": "^1.6.7"
+	},
+	"lint-staged": {
+		"*.{js,vue,ts}": [
+			"pnpm lint"
+		]
+	}
+}

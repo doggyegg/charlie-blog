@@ -1,0 +1,57 @@
+{
+  // 保存时格式化代码
+  "editor.formatOnSave": true,
+  // 字体大小
+  "editor.fontSize": 14,
+	// 默认使用tab符缩进
+	"editor.detectIndentation": false,
+  "editor.insertSpaces": false,
+  // 重新设定tabsize
+  "editor.tabSize": 2,
+  // 在使用搜索功能时，将这些文件夹/文件排除在外
+  "search.exclude": {
+    "**/dist": true
+  },
+  // 这些文件将不会显示在工作空间中
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.DS_Store": true
+  },
+  "[vue]": {
+		// 使用prettier格式化【vue】文件
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    // 使用prettier格式化【javascript】文件
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    // 使用prettier格式化【typescript】文件
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    // 使用prettier格式化【json】文件
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    // 使用prettier格式化【html】文件
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    // 使用prettier格式化【markdown】文件
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    // 使用prettier格式化【css】文件
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    // 使用prettier格式化【scss】文件
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[less]": {
+    // 使用prettier格式化【less】文件
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+}

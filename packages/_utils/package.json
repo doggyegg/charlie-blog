@@ -1,0 +1,17 @@
+{
+	"name": "@charlie-blog/utils",
+	"version": "1.0.0",
+	"description": "The utils serve for other subPackages",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	}
+}
