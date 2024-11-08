@@ -13,15 +13,15 @@ Charlie-Blog 为个人博客项目，包含 PC 管理端，PC 用户端，接口
   - fileUploader：大文件上传
   - util：常用工具函数
 - admin：后台管理端
+  - react
+  - react-router
+  - redux
+  - antd
+- customer：客户 PC 端
   - vue3
   - vue-router
   - pinia
   - element-plus
-- customer：客户 PC 端
-  - react
-  - react-router
-  - mobx
-  - antd
 - mobile:客户移动端(h5,小程序)
   - uniapp
   - vue3
