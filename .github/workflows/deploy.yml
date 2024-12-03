@@ -1,0 +1,43 @@
+name: Deploy VitePress site to Pages
+
+on:
+  push:
+    # 推送任意tags或者master分支推送的时候触发任务
+    tags:
+      - "*"
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy-and-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          ref: "master"
+
+      - name: Install yarn
+        run: corepack enable
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build Site
+        run: npm run docs:build
+
+      # 将文档产物提交到master分支
+      - name: Deploy for Github 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
+        with:
+          branch: master
+          folder: docs/.vitepress/dist
+          # enable single-commit to reduce the repo size
+          single-commit: true
+          clean: true
