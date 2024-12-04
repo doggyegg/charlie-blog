@@ -1,4 +1,4 @@
-name: Charlie-blog deploy work-flow
+name: charlie-blog deploy workflow
 
 # 设置触发时机，当推送master分支或者tag到远程时触发
 on:
