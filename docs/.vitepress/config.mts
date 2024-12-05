@@ -1,17 +1,16 @@
 import { defineConfig } from "vitepress";
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
   base: "/charlie-blog/",
   title: "Charlie Blog",
   description: "Welcome to Charlie's blog!",
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Home", link: "/" },
-      { text: "Examples", link: "/markdown-examples" },
+      { text: "Front-end", link: "/blogs/front-end" },
+      { text: "Back-end", link: "/blogs/back-end" },
+      { text: "Others", link: "/blogs/others" },
     ],
-
     sidebar: [
       {
         text: "Examples1",
@@ -21,9 +20,8 @@ export default defineConfig({
         ],
       },
     ],
-
     socialLinks: [
-      { icon: "github", link: "https://github.com/vuejs/vitepress" },
+      { icon: "github", link: "https://github.com/doggyegg/charlie-blog" },
     ],
   },
 });
