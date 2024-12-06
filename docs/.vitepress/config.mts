@@ -1,26 +1,27 @@
 import { defineConfig } from "vitepress";
+import utils from "./utils";
+const { getSideBar } = utils;
 
 export default defineConfig({
   base: "/charlie-blog/",
   title: "Charlie Blog",
   description: "Welcome to Charlie's blog!",
-
+  cleanUrls: true,
   themeConfig: {
     nav: [
       { text: "Home", link: "/" },
-      { text: "Front-end", link: "/front-end/index" },
-      { text: "Back-end", link: "/back-end/index" },
-      { text: "Others", link: "/others/index" },
+      { text: "Front-end", link: "/front/index", activeMatch: "/front/" },
+      { text: "Back-end", link: "/back/index", activeMatch: "/back/" },
+      { text: "Others", link: "/others/index", activeMatch: "/others/" },
     ],
-    sidebar: [
-      {
-        text: "Examples1",
-        items: [
-          { text: "Markdown Examples", link: "/markdown-examples" },
-          { text: "Runtime API Examples", link: "/api-examples" },
-        ],
-      },
-    ],
+    search: {
+      provider: "local",
+    },
+    sidebar: {
+      "/front/": getSideBar("front"),
+      "/back/": getSideBar("back"),
+      "/others": getSideBar("others"),
+    },
     socialLinks: [
       { icon: "github", link: "https://github.com/doggyegg/charlie-blog" },
     ],
