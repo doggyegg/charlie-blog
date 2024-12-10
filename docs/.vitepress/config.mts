@@ -8,11 +8,12 @@ export default defineConfig({
   description: "Welcome to Charlie's blog!",
   cleanUrls: true,
   themeConfig: {
+    outline: "deep",
     nav: [
       { text: "Home", link: "/" },
       { text: "Front-end", link: "/front/index", activeMatch: "/front/" },
       { text: "Back-end", link: "/back/index", activeMatch: "/back/" },
-      { text: "Others", link: "/others/index", activeMatch: "/others/" },
+      { text: "Others", link: "/others/operation/md", activeMatch: "/others/" },
     ],
     search: {
       provider: "local",

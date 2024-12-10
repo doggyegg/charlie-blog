@@ -14,6 +14,15 @@ export default {
               },
             ],
           },
+          {
+            text: "小程序",
+            items: [
+              {
+                text: "包体积优化",
+                link: "/front/mini/packageSize",
+              },
+            ],
+          },
         ],
       },
       {
@@ -34,7 +43,16 @@ export default {
         text: "others",
         items: [
           {
-            text: "运维",
+            text: "常用操作指令",
+            items: [
+              {
+                text: "MarkDown",
+                link: "/others/operation/md",
+              },
+            ],
+          },
+          {
+            text: "运维相关",
             items: [
               {
                 text: "Nginx",

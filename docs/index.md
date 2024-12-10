@@ -27,6 +27,6 @@ features:
   - title: Others
     icon:
       src: /network-icon.svg
-    link: /others/index
+    link: /others/operation/md
     details: Git operation, network engineering, and some other commonly used programming tools, skills and so on
 ---
