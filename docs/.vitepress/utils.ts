@@ -6,11 +6,11 @@ export default {
         // collapsed: true,
         items: [
           {
-            text: "Html",
+            text: "前端工程化",
             items: [
               {
-                text: "瀑布流",
-                link: "/front/waterfall",
+                text: "前端规范搭建",
+                link: "/front/engi/rule.md",
               },
             ],
           },
