@@ -130,10 +130,10 @@ console.log(text);
 ### **图片**
 
 ```markdown
-![alt区域](/public/home-banner.jpg "title文本")
+![alt区域](/public/home/home-banner.jpg "title文本")
 ```
 
-![alt区域](/public/home-banner.jpg "title 文本")
+![alt区域](/public/home/home-banner.jpg "title 文本")
 
 ### **表格**
 
