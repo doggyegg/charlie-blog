@@ -8,6 +8,7 @@ export default defineConfig({
   description: "Welcome to Charlie's blog!",
   cleanUrls: true,
   themeConfig: {
+    logo: "/websiteLogo.svg",
     outline: "deep",
     nav: [
       { text: "Home", link: "/" },
