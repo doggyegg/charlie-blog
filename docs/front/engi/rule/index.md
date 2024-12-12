@@ -406,4 +406,4 @@ module.exports = {
     ```
 
     至此配置完成，后续提交代码使用 git cz 命令即可进行可视化提交，具体效果如下
-    ![alt text](/cz.png)
+    ![alt text](cz.png)
