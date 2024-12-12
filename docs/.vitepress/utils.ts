@@ -10,19 +10,19 @@ export default {
             items: [
               {
                 text: "前端规范搭建",
-                link: "/front/engi/rule",
+                link: "/front/engi/rule/",
               },
               {
                 text: "Monorepo理论与实践",
-                link: "/front/engi/monorepo",
+                link: "/front/engi/monorepo/",
               },
               {
                 text: "微前端架构浅析",
-                link: "/front/engi/microFront",
+                link: "/front/engi/microFront/",
               },
               {
                 text: "Npm发包流程",
-                link: "/front/engi/npmPublish",
+                link: "/front/engi/npmPublish/",
               },
             ],
           },
@@ -31,11 +31,11 @@ export default {
             items: [
               {
                 text: "前端常用Debugger技巧",
-                link: "front/base/debugger",
+                link: "front/base/debugger/",
               },
               {
                 text: "浏览器工作原理",
-                link: "front/base/browserCore",
+                link: "front/base/browserCore/",
               },
             ],
           },
@@ -44,11 +44,11 @@ export default {
             items: [
               {
                 text: "包体积优化",
-                link: "/front/mini/packageSize",
+                link: "/front/mini/packageSize/",
               },
               {
                 text: "Uniapp踩坑合集",
-                link: "/front/mini/uniapp",
+                link: "/front/mini/uniapp/",
               },
             ],
           },
@@ -57,7 +57,7 @@ export default {
             items: [
               {
                 text: "10分钟搭建一个属于自己的博客",
-                link: "front/practice/blog",
+                link: "front/practice/blog/",
               },
             ],
           },
@@ -71,7 +71,7 @@ export default {
             items: [
               {
                 text: "Nest",
-                link: "/back/framework/nest",
+                link: "/back/framework/nest/",
               },
             ],
           },
@@ -85,7 +85,7 @@ export default {
             items: [
               {
                 text: "MarkDown",
-                link: "/others/operation/md",
+                link: "/others/operation/md/",
               },
             ],
           },
@@ -94,11 +94,11 @@ export default {
             items: [
               {
                 text: "关于浏览器缓存那些事",
-                link: "/others/maintain/cache",
+                link: "/others/maintain/cache/",
               },
               {
                 text: "Nginx",
-                link: "/others/maintain/ng",
+                link: "/others/maintain/ng/",
               },
             ],
           },
