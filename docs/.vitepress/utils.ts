@@ -18,7 +18,11 @@ export default {
               },
               {
                 text: "微前端架构浅析",
-                link: "/front/engi/micro-front",
+                link: "/front/engi/microFront",
+              },
+              {
+                text: "Npm发包流程",
+                link: "/front/engi/npmPublish",
               },
             ],
           },
@@ -31,7 +35,7 @@ export default {
               },
               {
                 text: "浏览器工作原理",
-                link: "front/base/browser",
+                link: "front/base/browserCore",
               },
             ],
           },
@@ -63,16 +67,13 @@ export default {
         text: "back",
         items: [
           {
-            text: "Framework",
+            text: "后端框架",
             items: [
               {
-                text: "Nest.js",
-                link: "/back/nest",
+                text: "Nest",
+                link: "/back/framework/nest",
               },
             ],
-          },
-          {
-            text: "常用数据库浅析",
           },
         ],
       },

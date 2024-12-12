@@ -23,7 +23,7 @@ export default defineConfig({
     nav: [
       { text: "Home", link: "/" },
       { text: "Front-end", link: "/front/engi/rule", activeMatch: "/front/" },
-      { text: "Back-end", link: "/back/index", activeMatch: "/back/" },
+      { text: "Back-end", link: "/back/framework/nest", activeMatch: "/back/" },
       { text: "Others", link: "/others/operation/md", activeMatch: "/others/" },
     ],
     search: {
