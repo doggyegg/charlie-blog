@@ -74,9 +74,21 @@ const { getSideBar } = utils;
 export default defineConfig({
   base: "/charlie-blog/", // 项目根路由，github部署后的基础路由如:xx.github.io/charlie-blog/
   title: "Charlie Blog", // 浏览器标签标题
+  // 浏览器标签的favicon
+  head: [
+    [
+      "link",
+      {
+        rel: "icon",
+        type: "image/svg+xml",
+        href: "/charlie-blog/websiteLogo.svg",
+      },
+    ],
+  ],
   description: "Welcome to Charlie's blog!", // 浏览器检索关键字
   cleanUrls: true, // 路由地址隐藏.html
   themeConfig: {
+    logo: "/websiteLogo.svg", // 站点标题前的icon
     outline: "deep", // 文章目录显示方式，deep为完整显示，false不显示，[1,3]显示1-3级
     // 导航区域，text:文本  link:对应跳转链接  activeMatch,当路由里包含xx时，该项高亮
     nav: [
@@ -85,6 +97,7 @@ export default defineConfig({
       { text: "Back-end", link: "/back/index", activeMatch: "/back/" },
       { text: "Others", link: "/others/operation/md", activeMatch: "/others/" },
     ],
+
     // 启动本地搜索功能
     search: {
       provider: "local",
@@ -126,7 +139,7 @@ export default {
             items: [
               {
                 text: "前端规范搭建",
-                link: "/front/engi/rule",
+                link: "/front/engi/rule/",
               },
             ],
           },
@@ -140,7 +153,7 @@ export default {
             items: [
               {
                 text: "Nest.js",
-                link: "/back/nest",
+                link: "/back/nest/",
               },
             ],
           },
@@ -154,7 +167,7 @@ export default {
             items: [
               {
                 text: "MarkDown",
-                link: "/others/operation",
+                link: "/others/operation/",
               },
             ],
           },
