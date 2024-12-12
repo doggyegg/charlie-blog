@@ -11,13 +11,13 @@ hero:
   actions:
     - theme: brand
       text: View Blogs
-      link: /front/index
+      link: /front/engi/rule
 
 features:
   - title: Front End
     icon:
       src: /home/front-end-icon.svg
-    link: /front/index
+    link: /front/engi/rule
     details: Front-end frameworks such as Vue and React, technical design such as micro-front-end and low code, and common front-end performance optimization schemes
   - title: Back End
     icon:

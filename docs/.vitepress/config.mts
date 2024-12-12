@@ -11,7 +11,7 @@ export default defineConfig({
     outline: "deep",
     nav: [
       { text: "Home", link: "/" },
-      { text: "Front-end", link: "/front/index", activeMatch: "/front/" },
+      { text: "Front-end", link: "/front/engi/rule", activeMatch: "/front/" },
       { text: "Back-end", link: "/back/index", activeMatch: "/back/" },
       { text: "Others", link: "/others/operation/md", activeMatch: "/others/" },
     ],

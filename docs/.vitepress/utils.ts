@@ -10,7 +10,28 @@ export default {
             items: [
               {
                 text: "前端规范搭建",
-                link: "/front/engi/rule.md",
+                link: "/front/engi/rule",
+              },
+              {
+                text: "Monorepo理论与实践",
+                link: "/front/engi/monorepo",
+              },
+              {
+                text: "微前端架构浅析",
+                link: "/front/engi/micro-front",
+              },
+            ],
+          },
+          {
+            text: "前端基础",
+            items: [
+              {
+                text: "前端常用Debugger技巧",
+                link: "front/base/debugger",
+              },
+              {
+                text: "浏览器工作原理",
+                link: "front/base/browser",
               },
             ],
           },
@@ -20,6 +41,19 @@ export default {
               {
                 text: "包体积优化",
                 link: "/front/mini/packageSize",
+              },
+              {
+                text: "Uniapp踩坑合集",
+                link: "/front/mini/uniapp",
+              },
+            ],
+          },
+          {
+            text: "项目实践",
+            items: [
+              {
+                text: "10分钟搭建一个属于自己的博客",
+                link: "front/practice/blog",
               },
             ],
           },
@@ -37,6 +71,9 @@ export default {
               },
             ],
           },
+          {
+            text: "常用数据库浅析",
+          },
         ],
       },
       {
@@ -47,13 +84,17 @@ export default {
             items: [
               {
                 text: "MarkDown",
-                link: "/others/operation/md",
+                link: "/others/operation",
               },
             ],
           },
           {
-            text: "运维相关",
+            text: "网络与运维",
             items: [
+              {
+                text: "关于浏览器缓存那些事",
+                link: "/others/maintain/cache",
+              },
               {
                 text: "Nginx",
                 link: "/others/maintain/ng",
