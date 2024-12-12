@@ -6,6 +6,16 @@ export default defineConfig({
   base: "/charlie-blog/",
   title: "Charlie Blog",
   description: "Welcome to Charlie's blog!",
+  head: [
+    [
+      "link",
+      {
+        rel: "icon",
+        type: "image/svg+xml",
+        href: "/charlie-blog/websiteLogo.svg",
+      },
+    ],
+  ],
   cleanUrls: true,
   themeConfig: {
     logo: "/websiteLogo.svg",
