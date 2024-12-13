@@ -3,9 +3,10 @@ export default {
     const wholeList = [
       {
         text: "front",
-        // collapsed: true,
+        collapsed: true,
         items: [
           {
+            collapsed: true,
             text: "前端工程化",
             items: [
               {
@@ -57,7 +58,7 @@ export default {
             items: [
               {
                 text: "10分钟搭建一个属于自己的博客",
-                link: "front/practice/blog/",
+                link: "/front/practice/blog/",
               },
             ],
           },
