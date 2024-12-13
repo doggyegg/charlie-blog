@@ -3,10 +3,9 @@ export default {
     const wholeList = [
       {
         text: "front",
-        collapsed: true,
         items: [
           {
-            collapsed: true,
+            // collapsed: true,
             text: "前端工程化",
             items: [
               {
@@ -32,11 +31,11 @@ export default {
             items: [
               {
                 text: "前端常用Debugger技巧",
-                link: "front/base/debugger/",
+                link: "/front/base/debugger/",
               },
               {
                 text: "浏览器工作原理",
-                link: "front/base/browserCore/",
+                link: "/front/base/browserCore/",
               },
             ],
           },
