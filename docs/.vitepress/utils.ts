@@ -33,10 +33,6 @@ export default {
                 text: "前端常用Debugger技巧",
                 link: "/front/base/debugger/",
               },
-              {
-                text: "浏览器工作原理",
-                link: "/front/base/browserCore/",
-              },
             ],
           },
           {
