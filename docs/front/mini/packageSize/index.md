@@ -14,9 +14,9 @@
 
 **注意**:相关包体积的构成，可以在微信开发者工具的依赖关系中查看，这样可以更有针对性的确定优化方向
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/8107756d90f5450facc75a646eb7be28~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5YmN56uv6Zi_5ZGG:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiNDA1MDczNzYyMTkxOTQ0In0%3D&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1735184776&x-orig-sign=R2EIdJu8rr0HiayCS98gxgLjLxk%3D)
+![alt text](image1.png)
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/9ebd63b091054f80b3ddb0d36d89e527~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5YmN56uv6Zi_5ZGG:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiNDA1MDczNzYyMTkxOTQ0In0%3D&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1735184776&x-orig-sign=a6V6wDbEeTFaRYLzZhPfC1nUTjs%3D)
+![alt text](image2.png)
 
 ## 优化方案
 
@@ -24,12 +24,12 @@
 
 - uniapp manifest.json:
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/18c33f10de384af2a492b0f31e755e0f~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5YmN56uv6Zi_5ZGG:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiNDA1MDczNzYyMTkxOTQ0In0%3D&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1735184776&x-orig-sign=Y5eZIqRaUBCJNlDL5F5Q4o%2Bu2oE%3D)
+![alt text](image3.png)
 
 - 运行时压缩代码（发行时自动会压缩，无需配置）
   - HbuilderX 编译：
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/ef9919895632452c807fbcda24edcdea~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5YmN56uv6Zi_5ZGG:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiNDA1MDczNzYyMTkxOTQ0In0%3D&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1735184776&x-orig-sign=9oT09w6CgO5OHzb8HndPVujO1bE%3D)
+![alt text](image4.png)
 \- 命令行编译：
 pacakge.json,script 运行命令添加参数\*\*--minimize\*\*
 
@@ -64,14 +64,14 @@ pacakge.json,script 运行命令添加参数\*\*--minimize\*\*
 - 如何进行独立分包
   - 业务划分：在业务层面将各个功能板块进行分类，如美团小程序的骑行可作为一个子包，美食可作为一个子包等，后续骑行和美食的各个业务页面及功能都在分包下面开发
   - 目录结构划分，以美团小程序作为模拟场景（注意：仅自己 YY，并非美团真实架构）
-  - ![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/b77abda4ead3472f9601a9b8e1a61d8c~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5YmN56uv6Zi_5ZGG:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiNDA1MDczNzYyMTkxOTQ0In0%3D&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1735184776&x-orig-sign=yohRDbZw1zVinrz91%2FXsGOZHRTk%3D)
+  - ![alt text](image5.png)
   - pages.json 配置文件加入各个分包路径
-  - ![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/fb1cf66e51324f7ba1f230464b2543f6~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5YmN56uv6Zi_5ZGG:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiNDA1MDczNzYyMTkxOTQ0In0%3D&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1735184776&x-orig-sign=534A%2B8soOYDby%2BYuyIhIzR9ZVHc%3D)
+  - ![alt text](image6.png)
   - 运行项目后查看代码依赖分析，发现已经分包成功！
-  - ![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/701ac8e7e3cf4acdb9c1fac74508424c~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5YmN56uv6Zi_5ZGG:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiNDA1MDczNzYyMTkxOTQ0In0%3D&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1735184776&x-orig-sign=D5ts6rKNWcoAm1WuzRBMntHLBAw%3D)
+  - ![alt text](image7.png)
   - [官方文档链接](https://uniapp.dcloud.net.cn/collocation/manifest.html#%E5%85%B3%E4%BA%8E%E5%88%86%E5%8C%85%E4%BC%98%E5%8C%96%E7%9A%84%E8%AF%B4%E6%98%8E)
   - **注意**：如果按照以上配置后分包没有成功，或者部分分包代码依然被打入了主包的 vendor.js 下面导致 vendor.js 过大，请检查根目录 manifest 中是否开启 uniapp 的启用分包配置
-  - ![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/3a65a1eaa51b42ddb9a33fdca55ce708~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5YmN56uv6Zi_5ZGG:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiNDA1MDczNzYyMTkxOTQ0In0%3D&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1735184776&x-orig-sign=Zoodnrsvz%2FHKx89g0MaYxVXhL2o%3D)
+  - ![alt text](image8.png)
 
 ### node-modules 分包
 
