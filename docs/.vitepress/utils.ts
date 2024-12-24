@@ -30,8 +30,12 @@ export default {
             text: "前端基础",
             items: [
               {
-                text: "前端常用Debugger技巧",
+                text: "前端最全Debugger技巧",
                 link: "/front/base/debugger/",
+              },
+              {
+                text: "前端常见性能优化方案",
+                link: "/front/base/performance/",
               },
             ],
           },

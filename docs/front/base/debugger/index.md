@@ -1,16 +1,8 @@
 # 前端最全 debugger 技巧
 
-## 前言
-
-Bug 调试是每个开发人员都应该具备的能力，那么如何才能较为高效的进行前端的 bug 定位与调试呢?我们日常中使用的浏览器开发者工具，你真的了解它吗？
-
-本文将以浏览器开发者工具核心功能，三方框架配套插件等工具，对日常开发调试，线上 bug 调试，白屏、卡顿等问题进行深入讲解，同时也将对移动端及 Node 端调试入门进行一些基础的讲解
-
 ## 浏览器开发者工具
 
 浏览器开发者工具对于前端来说是使用最多的 Web 端 Debug 工具，其中开发者最为熟悉的为谷歌浏览器调试工具，除了谷歌外，别的浏览器或者一些 Webview 环境也提供了对应的开发者工具，功能大致相同，在此以谷歌浏览器（V131）作为 Demo 讲解
-
-谷歌浏览器开发者工具到目前为止已经提供了 30 多种功能给到开发者进行页面调试，可以到 **More tools** 中查看所有功能，本文主要围绕日常开发中最常用的功能进行讲解，主要包含 **Elements**,**Console**,**Sources**,**Network**,**Performance**,**Application** 几个模块
 
 ### Elements（元素）
 
@@ -80,7 +72,7 @@ Console 标签提供了非常丰富的功能，除了简单的日志输出，还
 
 - console.countReset：搭配 count 使用，可以重置当前作用域下的 count 次数
 
-- console.trace：打印当前输出被调用的完整调用栈，类似于 debugger 中的 call-tree
+- console.trace：打印当前输出被调用的完整调用栈，类似于 debugger 中的 call-stack
 
   ![alt text](image-6.png)
 
@@ -106,6 +98,8 @@ Sources 标签主要用于调试和分析 JavaScript 代码，它提供了强大
 
 在通过以上几个技巧进入到断点后，我们可以通过开发者工具的来进行代码的步进，变量的监听，call-stack 的回溯等等手段来定位及修复疑难 bug
 
+![alt text](image-14.png)
+
 下面我们逐一讲解在不同场景下，我们该如何进入到断点调试中
 
 - 代码断点
@@ -120,7 +114,7 @@ Sources 标签主要用于调试和分析 JavaScript 代码，它提供了强大
 
 - 网络断点
 
-  我们有时可能会遇到某些接口请求不知道是在哪里调用的，代码里又有很多地方都用到了该接口，这个时候，我们就可以通过网络断点结合 call-tree 来找到接口调用处
+  我们有时可能会遇到某些接口请求不知道是在哪里调用的，代码里又有很多地方都用到了该接口，这个时候，我们就可以通过网络断点结合 call-stack 来找到接口调用处
   ![alt text](image-9.png)
   ![alt text](image-12.png)
 
@@ -134,22 +128,32 @@ Sources 标签主要用于调试和分析 JavaScript 代码，它提供了强大
 - attribute modifications: 该节点的属性发生变化时进入断点
 - node removal：该节点被移除时进入断点
 
-进入断点后，我们根据对应的 call-tree 即可找到使 dom 变化的源头
+进入断点后，我们根据对应的 call-stack 即可找到使 dom 变化的源头
+
+- 事件断点
+
+  事件断点一般用于快速定位某事件被触发的源头
+
+  1. 首先在 Source Tab 下设置 Event listeners breakpoints
+     ![alt text](image-13.png)
+  2. 对应事件触发后，通过 call-stack 追溯到源码
+
+#### 线上调试代码
+
+- SourceMap
+
+- Override
+
+- 控制台 Search
 
 ### Network(网络)
 
 ### Performance(性能)
 
+该 Tab 主要用于性能优化时排查使用，详情请见博客中[前端性能优化](https://doggyegg.github.io/charlie-blog/)
+
 ### Application(应用)
 
 ## 三方框架插件
 
-## 线上 bug
-
-## 白屏问题
-
-## 卡顿问题
-
 ## 移动端调试
-
-## Node 调试
