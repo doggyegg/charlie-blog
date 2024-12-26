@@ -142,18 +142,124 @@ Sources 标签主要用于调试和分析 JavaScript 代码，它提供了强大
 
 - SourceMap
 
+  - 问题：通常来说我们发到线上的静态资源为了减小包体积及防止源码泄露等问题，等会在发布前进行代码压缩和混淆，那么在可读性上会大打折扣，从而增加调试 bug 的难度
+    ![alt text](image-15.png)
+
+  - 方案：我们可以通过 Webpack 配置，来开启 SourceMap，本质上就是将源码保留并且和打包后的资源建立映射关系，在调试代码的时候，浏览器指向源码处，这样就能很轻松的进行调试了
+  - 具体步骤：
+
+    1. 更改 Webpack 配置文件
+
+       ```js
+       module.exports = {
+       ...,
+       // 开发环境生成SourceMap, 一般不推荐包体积会增大，且代码易泄露
+       productionSourceMap: true,
+       configureWebpack: {
+       // 开发环境开启SourceMap
+       devtool: 'source-map'
+         },
+       }
+       ```
+
+    2. 浏览器中开启 SourceMap 支持
+       ![alt text](image-16.png)
+
+- Search
+
+Search 功能可以帮我们在当前本地及远程请求回来的所有资源中（静态和接口均可）搜索关键字来进行代码定位
+
+![alt text](image-17.png)
+
+![alt text](image-18.png)
+
+按照上图步骤完成定位后，你可以通过 debugger(断点)或者 override(重写)的方式进行线上 bug 调试
+
 - Override
 
-- 控制台 Search
+Override 可以让我们在本地临时修改线上运行的代码来排查问题，具体的操作步骤如下：
+
+1. 先通过上述 Search 的方法定位到目标代码及所在文件
+2. 右键代码所在文件，点击 Override content
+   ![alt text](image-19.png)
+3. 选择本地映射的资源位置，随便指定一个文件夹即可
+   ![alt text](image-20.png)
+4. 允许 DevTools 的授权
+   ![alt text](image-21.png)
+5. 在线上代码上做编辑，编辑完成后刷新页面即可生效
+   ![alt text](image-22.png)
+6. 还原线上代码
+   ![alt text](image-23.png)
 
 ### Network(网络)
 
+Network 该栏主要是针对浏览器网络进程做的抓包工具，所有网络请求均会被捕获，并且能在该栏中查看及调试
+
+#### 基本功能
+
+![alt text](image-24.png)
+
+#### 实用技巧
+
+1. Curl
+
+在联调过程中，后端研发经常会让前端将请求数据给他们，或者重新调请求，我们前端可以通过复制 Curl 给到后端，里面包含一切请求数据，并且后端可以直接在终端中执行 Curl 自己请求接口
+
+![alt text](image-25.png)
+
+![alt text](image-26.png)
+
+2. Override
+
+上文讲到我们可以在 Source 中对静态资源进行重写，在 network 中同样允许我们对接口资源进行重写，来达到 mock 数据的目的，比如将线上环境的数据拿到本地开发环境使用
+
+![alt text](image-27.png)
+
+![alt text](image-28.png)
+
+3. 模拟请求失败场景
+
+在我们日常开发中，可能有些时候需要模拟某个资源请求失败的场景，来做降级逻辑或异常兜底的开发
+
+![alt text](image-29.png)
+
 ### Performance(性能)
 
-该 Tab 主要用于性能优化时排查使用，详情请见博客中[前端性能优化](https://doggyegg.github.io/charlie-blog/)
+该 Tab 主要用于性能优化时排查使用，详情请见博客中[前端性能优化](https://doggyegg.github.io/charlie-blog/front/base/performance/)
 
 ### Application(应用)
 
+该栏主要展示某些存放在浏览器文件夹下的缓存文件数据，如 Cookie,LocalStorage,SessionStorage,IndexDB 等
+
+通过修改本地储存中 Token 的值，我们可以模拟其它账号登录，用于接口的数据调试等功能的调试
+
+![alt text](image-30.png)
+
 ## 三方框架插件
 
+除了浏览器自带的开发者工具外，我们也可以通过一些 3 方框架配套的浏览器插件来进行调试，如 Vue-DevTool 及 React
+
+### Vue-devTool
+
+- [安装链接（需要翻墙）](https://chromewebstore.google.com/detail/vuejs-devtools/iaajmlceplecbljialhhkmedjlpdblhp)
+- 安装完成后在开发环境如果是 Vue 项目即可使用该插件进行状态、Dom、等等的调试
+  ![alt text](image-31.png)
+- 默认情况下，只有在开发环境该插件才能正常加载使用，但是我们可以通过安装[Vue force dev](https://chromewebstore.google.com/detail/vue-force-dev/oohfffedbkbjnbpbbedapppafmlnccmb) 来实现生产环境使用 Vue-devtool 调试
+
+### React
+
+- [React Developer Tools 安装链接](https://chromewebstore.google.com/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)
+
+![alt text](image-32.png)
+
 ## 移动端调试
+
+常见的移动端应用一般分为 H5，小程序，APP 等，我们从这 3 个终端来讲讲移动端的真机调试技巧
+
+### H5
+
+### 小程序
+
+### APP
+
+。。。未完待续

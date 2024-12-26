@@ -50,6 +50,10 @@ export default {
                 text: "Uniapp踩坑合集",
                 link: "/front/mini/uniapp/",
               },
+              {
+                text: "Uniapp对接微信原生SDK",
+                link: "/front/mini/thirdSDK/",
+              },
             ],
           },
           {
