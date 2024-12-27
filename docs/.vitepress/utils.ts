@@ -21,8 +21,8 @@ export default {
                 link: "/front/engi/microFront/",
               },
               {
-                text: "Npm发包流程",
-                link: "/front/engi/npmPublish/",
+                text: "搭建你的专属组件库",
+                link: "/front/engi/components/",
               },
             ],
           },
