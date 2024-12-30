@@ -40,19 +40,27 @@ export default {
             ],
           },
           {
-            text: "小程序",
+            text: "Uniapp跨端开发",
             items: [
               {
                 text: "包体积优化",
                 link: "/front/mini/packageSize/",
               },
               {
-                text: "Uniapp踩坑合集",
-                link: "/front/mini/uniapp/",
+                text: "自定义编译变量及环境变量",
+                link: "/front/mini/var/",
+              },
+              {
+                text: "从Hbuilder迁移到命令行编译",
+                link: "/front/mini/hb2cli",
               },
               {
                 text: "Uniapp对接微信原生SDK",
                 link: "/front/mini/thirdSDK/",
+              },
+              {
+                text: "Uniapp踩坑合集",
+                link: "/front/mini/trap/",
               },
             ],
           },
@@ -87,6 +95,10 @@ export default {
           {
             text: "常用操作指令",
             items: [
+              {
+                text: "Git",
+                link: "/others/operation/git/",
+              },
               {
                 text: "MarkDown",
                 link: "/others/operation/md/",
