@@ -249,8 +249,8 @@ Network 该栏主要是针对浏览器网络进程做的抓包工具，所有网
 ### React
 
 - [React Developer Tools 安装链接](https://chromewebstore.google.com/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)
-
-![alt text](image-32.png)
+- [LocatorJS-点击页面跳转到 vscode 源码处](https://chromewebstore.google.com/detail/locatorjs/npbfdllefekhdplbkdigpncggmojpefi)
+  ![alt text](image-32.png)
 
 ## 移动端真机调试
 

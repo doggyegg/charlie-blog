@@ -34,7 +34,7 @@ jobs:
         run: pnpm install
       # 打包vitepress项目
       - name: Build Site
-        run: pnpm run docs:build
+        run: pnpm run build
       # 将打包后dist里的产物提交到prod分支
       - name: Deploy for Github 🚀
         uses: JamesIves/github-pages-deploy-action@v4.4.1

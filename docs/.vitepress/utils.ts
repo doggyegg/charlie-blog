@@ -65,6 +65,15 @@ export default {
             ],
           },
           {
+            text:"源码分析",
+            items: [
+              {
+                text: "vue2响应式原理",
+                link: "/front/source/vue2/reactive/",
+              },
+            ],
+          },
+          {
             text: "项目实践",
             items: [
               {
