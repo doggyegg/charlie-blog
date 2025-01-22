@@ -34,6 +34,10 @@ export default {
                 link: "/front/base/debugger/",
               },
               {
+                text:"从前端视角看AI世界",
+                link:"/front/base/Ai/"
+              },
+              {
                 text: "前端常见性能优化方案",
                 link: "/front/base/performance/",
               },

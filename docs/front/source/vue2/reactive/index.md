@@ -9,7 +9,7 @@
 
 ![alt text](image.png)
 
-通常来说普通Vue项目里，只会在main.js中手动实例化Vue（根组件）,后续子组件的实例化对于业务开发者是无感的（文章后续会专门讨论子组件的实例化是如何完成的），那么从main.js中的new Vue，到$mount将视图及数据绑定，并且挂载真实Dom之间，Vue内部发生了些什么事呢，我们结合源码一起看看
+从main.js中的new Vue，到$mount将视图及数据绑定，并且挂载真实Dom之间，Vue内部发生了些什么事呢，我们结合源码一起看看
 
 ![alt text](image-1.png)
 
@@ -23,13 +23,13 @@
 
 在initState中，主要对props,methods,data,computed,watch分别进行了初始化，初始化的过程就是数据实现响应式的过程
 
-1. **initData**
+ **initData**
 
 ![alt text](image-4.png)
 
 从上述代码里我们可以看到，在observe（data）调用前，所有的代码都是一些边界处理及错误的前置判断
 
-首先会根据你传入的data是函数还是对象，来决定data的获取方式，拿到data后，会去遍历data里的key，分别和methods及props中的key进行对比，我们能够直观的看出，具体优先级是props> data > methods的 
+首先会根据你传入的data是函数还是对象，来决定data的获取方式，拿到data后，会去遍历data里的key，分别和methods及props中的key进行对比，看是否同名，我们能够直观的看出，具体优先级是props> data > methods的 
 
 在处理完各种判断后，调用了observe函数并且将data进行了传入
 
@@ -75,11 +75,11 @@ defineReactive是响应式体系中最核心的一个函数，我们常说的def
 
 new Vue(options) => _init(options)=> initState(vm)=>initData(vm)=> observe(data)=> new Observer(data) => defineReactive(data,key)=>get=>dep.depend=>set=>dep.notify
 
-在该过程中，options中的data的各个属性值均通过Object.defineProperty进行数据劫持，在get时，会去调取dep实例的depend方法，收集watcher，在set时，会去调用dep实例的notify方法，调用前面get时收集到的watcher, 而这些watcher本质是就是函数，其中renderWatcher执行时，Vue就会通过操作dom的方式让真实Dom更新，从而达到页面视图重新渲染的目的
+在该过程中，options中的data的各个属性值均通过Object.defineProperty进行数据劫持，在get时，会去调取dep实例的depend方法，收集watcher，在set时，会去调用dep实例的notify方法，调用前面get时收集到的watcher, 而这些watcher本质是就是函数，其中就包括了Vue._update这个更新视图的函数，执行时，Vue就会通过操作dom的方式让真实Dom更新，从而达到页面视图重新渲染的目的
 
-## Vue的3大核心类
+## Vue的核心类
 
-在第一部分 new Vue的章节中，我们对从数据变化，到视图更新的流程有了大致的了解，但是一些细节上的东西还是比较模糊的，比如 dep实例的depend 和 notify函数究竟是怎么收集和派发watcher的,watcher又是什么，在哪生成，有什么作用等等，接下来我们会讲解vue2响应式体系中最核心的两大类,Dep及Watcher
+在第一部分 new Vue的章节中，我们对从数据变化，到视图更新的流程有了大致的了解，但是一些细节上的东西还是比较模糊的，比如 dep实例的depend 和 notify函数究竟是怎么收集和派发watcher的,watcher又是什么，在哪生成，有什么作用等等，接下来我们会讲解vue2响应式体系中除了上文已经提到的Observer外，另外2个核心的类,Dep及Watcher
 
 ### Dep
 
@@ -93,6 +93,7 @@ new Vue(options) => _init(options)=> initState(vm)=>initData(vm)=> observe(data)
 3. id：用于标识当前dep实例的唯一性
 
 那么Dep实例又有哪些方法呢？
+
 
 1. addSub
 
