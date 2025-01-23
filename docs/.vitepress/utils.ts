@@ -17,13 +17,14 @@ export default {
                 link: "/front/engi/monorepo/",
               },
               {
+                text: "前端常见性能优化方案",
+                link: "/front/base/performance/",
+              },
+              {
                 text: "微前端架构浅析",
                 link: "/front/engi/microFront/",
               },
-              {
-                text: "搭建你的专属组件库",
-                link: "/front/engi/components/",
-              },
+             
             ],
           },
           {
@@ -38,9 +39,10 @@ export default {
                 link:"/front/base/Ai/"
               },
               {
-                text: "前端常见性能优化方案",
-                link: "/front/base/performance/",
+                text: "10分钟搭建一个属于自己的博客",
+                link: "/front/practice/blog/",
               },
+             
             ],
           },
           {
@@ -53,10 +55,6 @@ export default {
               {
                 text: "自定义编译变量及环境变量",
                 link: "/front/mini/var/",
-              },
-              {
-                text: "从Hbuilder迁移到命令行编译",
-                link: "/front/mini/hb2cli",
               },
               {
                 text: "Uniapp对接微信原生SDK",
@@ -77,27 +75,40 @@ export default {
               },
             ],
           },
-          {
-            text: "项目实践",
-            items: [
-              {
-                text: "10分钟搭建一个属于自己的博客",
-                link: "/front/practice/blog/",
-              },
-            ],
-          },
         ],
       },
       {
         text: "back",
         items: [
           {
-            text: "后端框架",
+            text: "后端基础",
             items: [
               {
-                text: "Nest",
+                text:"论全干工程师的自我修养",
+                link:"/back/framework/chooseFrameWork/"
+              },
+              {
+                text:"浅析后端三层架构",
+                link:"/back/framework/structure/"
+              },
+             
+              {
+                text: "Nest入门与实践",
                 link: "/back/framework/nest/",
               },
+              {
+                text:"Redis入门与实践",
+                link:"/back/framework/redis/"
+              },
+              {
+                text:"关系型数据与非关系型数据库",
+                link:"/back/framework/database"
+              },
+              {
+                text:"MySql入门与实践",
+                link:"/back/framework/mysql"
+              }
+
             ],
           },
         ],
