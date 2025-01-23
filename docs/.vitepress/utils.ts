@@ -146,7 +146,7 @@ export default {
               },
               {
                 text:"Jenkins",
-                link:"others/maintain/jenkins/"
+                link:"/others/maintain/jenkins/"
               },
               {
                 text: "关于浏览器缓存那些事",
