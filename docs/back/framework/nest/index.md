@@ -203,11 +203,15 @@ npm run start:dev
 
 现在你可以使用 Postman 或 curl 测试以下接口：
 
+```bash
+
 - 创建用户：POST http://localhost:3000/users
 - 获取所有用户：GET http://localhost:3000/users
 - 获取单个用户：GET http://localhost:3000/users/:id
 - 更新用户：PUT http://localhost:3000/users/:id
 - 删除用户：DELETE http://localhost:3000/users/:id
+
+```
 
 ## 5. 总结
 
