@@ -127,18 +127,30 @@ export default {
                 text: "MarkDown",
                 link: "/others/operation/md/",
               },
+              {
+                text:"Linux",
+                link:"/others/operation/linux/"
+              }
             ],
           },
           {
             text: "网络与运维",
             items: [
               {
-                text: "关于浏览器缓存那些事",
-                link: "/others/maintain/cache/",
-              },
-              {
                 text: "Nginx",
                 link: "/others/maintain/ng/",
+              },
+              {
+                text:"Docker",
+                link:"/others/maintain/docker/"
+              },
+              {
+                text:"Jenkins",
+                link:"others/maintain/jenkins/"
+              },
+              {
+                text: "关于浏览器缓存那些事",
+                link: "/others/maintain/cache/",
               },
             ],
           },
