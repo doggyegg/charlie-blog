@@ -52,6 +52,10 @@ export default {
                 link: "/front/source/vue2/reactive/",
               },
               {
+                text:'TS入门及实践',
+                link:"/front/base/TS/"
+              },
+              {
                 text: "10分钟搭建一个属于自己的博客",
                 link: "/front/practice/blog/",
               },
