@@ -58,7 +58,7 @@ features: // 功能区
 - title: Others
   icon:
   src: /home/network-icon.svg
-  link: /others/operation/md
+  link: /others/operation/git
   details: Git operation, network engineering, and some other commonly used programming tools, skills and so on
 ```
 
@@ -95,7 +95,7 @@ export default defineConfig({
       { text: "Home", link: "/" },
       { text: "Front-end", link: "/front/engi/rule", activeMatch: "/front/" },
       { text: "Back-end", link: "/back/index", activeMatch: "/back/" },
-      { text: "Others", link: "/others/operation/md", activeMatch: "/others/" },
+      { text: "Others", link: "/others", activeMatch: "/others/" },
     ],
 
     // 启动本地搜索功能

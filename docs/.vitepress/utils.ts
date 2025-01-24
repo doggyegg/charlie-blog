@@ -21,8 +21,17 @@ export default {
                 link: "/front/base/performance/",
               },
               {
+                text:"前端资源部署策略",
+                link:"/front/engi/deploy/"
+              },
+              
+              {
                 text: "微前端架构浅析",
                 link: "/front/engi/microFront/",
+              },
+              {
+                text:"前端视角看CICD",
+                link:"/front/engi/CICD/"
               },
              
             ],
@@ -37,6 +46,10 @@ export default {
               {
                 text:"从前端视角看AI世界",
                 link:"/front/base/Ai/"
+              },
+              {
+                text: "vue2响应式原理",
+                link: "/front/source/vue2/reactive/",
               },
               {
                 text: "10分钟搭建一个属于自己的博客",
@@ -65,16 +78,8 @@ export default {
                 link: "/front/mini/trap/",
               },
             ],
-          },
-          {
-            text:"源码分析",
-            items: [
-              {
-                text: "vue2响应式原理",
-                link: "/front/source/vue2/reactive/",
-              },
-            ],
-          },
+          }
+          
         ],
       },
       {
@@ -149,7 +154,7 @@ export default {
                 link:"/others/maintain/jenkins/"
               },
               {
-                text: "关于浏览器缓存那些事",
+                text: "浅析浏览器缓存",
                 link: "/others/maintain/cache/",
               },
             ],

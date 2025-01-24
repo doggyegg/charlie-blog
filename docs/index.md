@@ -22,11 +22,11 @@ features:
   - title: Back End
     icon:
       src: /home/back-end-icon.svg
-    link: /back/framework/nest
+    link: /back/framework/chooseFrameWork
     details: Back-end framework applications such as express and nest.js, as well as the operation of common data such as mysql and mongodb
   - title: Others
     icon:
       src: /home/network-icon.svg
-    link: /others/operation/md
+    link: /others/operation/git
     details: Git operation, network engineering, and some other commonly used programming tools, skills and so on
 ---
