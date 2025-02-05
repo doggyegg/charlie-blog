@@ -48,7 +48,7 @@ export default {
                 link:"/front/base/Ai/"
               },
               {
-                text: "Vue2源码分析之响应式原理及NextTick队列调度",
+                text: "Vue2源码之响应式及队列调度",
                 link: "/front/source/vue2/reactive/",
               },
               {
