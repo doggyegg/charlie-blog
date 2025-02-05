@@ -44,22 +44,17 @@ export default {
                 link: "/front/base/debugger/",
               },
               {
-                text:"TS入门及实践",
-                link:"/front/base/TS/"
-              },
-              {
-                text:"前端常用设计模式",
-                link:"/front/base/designMode/"
-              },
-              {
                 text:"从前端视角看AI世界",
                 link:"/front/base/Ai/"
               },
               {
-                text: "vue2响应式原理",
+                text: "Vue2源码分析之响应式原理及NextTick队列调度",
                 link: "/front/source/vue2/reactive/",
               },
-             
+              {
+                text:'TS入门及实践',
+                link:"/front/base/TS/"
+              },
               {
                 text: "10分钟搭建一个属于自己的博客",
                 link: "/front/practice/blog/",
