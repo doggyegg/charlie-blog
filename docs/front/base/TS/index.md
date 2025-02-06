@@ -45,28 +45,107 @@ TypeScript很好地解决了这些问题。
 
 ## 3. TypeScript基础语法
 
-### 3.1 基本类型
+### 3.1 基本使用
 
 ```typescript
 // 基本类型
-let isDone: boolean = false;
-let decimal: number = 6;
-let color: string = "blue";
-let list: number[] = [1, 2, 3];
-let tuple: [string, number] = ["hello", 10];
+// js也有的
+let isDone: boolean = false; // 布尔值
+isDone = true ; // 正确
+isDone = 2; // 编译报错，不能将number类型赋值给布尔类型
+let decimal: number = 6; // 数字
+let color: string = "blue"; // 字符串
+let sym: symbol = Symbol("key");  // symbol
+let big1: bigint = BigInt(9007199254740991); // bigint
+let a:undefined = undefined; // undefined
+let b:null = null; // null
+// 声明为undefined或null的变量，后续任意类型的数据均不能为该变量赋值，所以如果要初始化为undefined或null的值，我们需要使用联合类型
+let number1:number|undefined = undefined;
+let arr1:number[]|null = null;
+// ts特有
+let data1:any = []; // 任意值，等同于js不声明,后续可任意更改类型
+let data2:unknown= []; // 不确定值，可任意更改类型，和any区别为调用该值的方法或属性时，需要通过if判断明确类型，或者使用断言语法
+// any和unknown区别的案例
+data1.push(2); // 正确
+data2.push(2); // 报错 'data2' is of type 'unknown'
+(data2 as number[]).push(2); // 正确
+if(Array.isArray(data2)) data2.push(2); // 正确
 
-// 枚举
+
+const list: number[] = [1, 2, 3]; // 数组写法1
+const list:Array<number> = [1,2]; // 数组写法2
+const tuple: [string, number] = ["hello", 10]; // 元组
+
+// 默认枚举,默认Red为0,后序依次递增，如green为1，blue为2。。。
 enum Color {Red, Green, Blue}
+
+// 数字枚举
+enum Direction {
+    Up = 1,        // 可以设置起始值
+    Down,          // 自动递增为 2
+    Left,          // 3
+    Right          // 4
+}
+
+// 字符串枚举
+enum HttpStatus {
+    OK = "OK",
+    NOT_FOUND = "NOT_FOUND",
+    BAD_REQUEST = "BAD_REQUEST",
+    SERVER_ERROR = "SERVER_ERROR"
+}
+
+// 异构枚举（混合型）
+enum BooleanLikeHeterogeneousEnum {
+    No = 0,
+    Yes = "YES",
+}
+// 枚举使用
 let c: Color = Color.Green;
 
 // Any和Unknown
 let notSure: any = 4;
 let uncertain: unknown = 4;
 
+// 类型不匹配示例
+let num: number = 42;
+// 以下赋值会导致编译错误
+// num = "42"; // 错误：不能将类型"string"分配给类型"number"
+// num = true; // 错误：不能将类型"boolean"分配给类型"number"
+
+let str: string = "hello";
+// str = 42; // 错误：不能将类型"number"分配给类型"string"
+
+// 使用类型断言可以绕过类型检查，但要谨慎使用
+let value: any = "hello";
+let strLength: number = (value as string).length; // 正确
+let numValue: number = 42;
+// let strValue: string = numValue as string; // 错误：不能直接断言不相关的类型
+
 // Void, Null和Undefined
 function warnUser(): void {
     console.log("This is a warning message");
 }
+
+// 类型推导示例
+let inferredNumber = 42; // 自动推断为number类型
+let inferredString = "hello"; // 自动推断为string类型
+let inferredArray = [1, 2, 3]; // 自动推断为number[]类型
+let inferredObject = { name: "Alice", age: 25 }; // 自动推断为{ name: string; age: number }类型
+
+// Never类型
+function error(message: string): never {
+    throw new Error(message);
+}
+ 
+// Symbol类型
+const sym = Symbol('me');
+const obj = {
+    [sym]: 'value'
+};
+
+// BigInt类型
+const max = BigInt(Number.MAX_SAFE_INTEGER);
 ```
 
 ### 3.2 类型别名（Type）
@@ -230,57 +309,24 @@ type ApiResponse<T> = {
     timestamp: number;
 };
 
-// 状态管理
-type State = {
-    user: {
-        id: number;
-        name: string;
-        preferences: {
-            theme: 'light' | 'dark';
-            notifications: boolean;
-        };
+// 用户接口
+interface User {
+    id: number;
+    username: string;
+    email: string;
+    profile: {
+        firstName: string;
+        lastName: string;
+        avatar?: string;
     };
-    cart: {
-        items: Array<{
-            id: number;
-            quantity: number;
-        }>;
-        total: number;
-    };
-};
+}
 
-// 事件处理
-type MouseEvent = {
-    type: 'mousedown' | 'mouseup' | 'mousemove';
-    x: number;
-    y: number;
-    timestamp: number;
-};
-
-type KeyboardEvent = {
-    type: 'keydown' | 'keyup';
-    key: string;
-    timestamp: number;
-};
-
-type AppEvent = MouseEvent | KeyboardEvent;
-
-// 表单验证
-type ValidationRule = {
-    validate: (value: string) => boolean;
-    message: string;
-};
-
-type FormField = {
-    value: string;
-    rules: ValidationRule[];
-    errors: string[];
-    touched: boolean;
-};
-
-type Form = {
-    [fieldName: string]: FormField;
-};
+// 用户服务接口
+interface UserService {
+    getUser(id: number): Promise<ApiResponse<User>>;
+    updateUser(id: number, data: Partial<User>): Promise<ApiResponse<void>>;
+    deleteUser(id: number): Promise<ApiResponse<void>>;
+}
 ```
 
 ### 3.3 接口（Interface）
@@ -611,7 +657,7 @@ interface Animal {
   name: string;
 }
 interface Dog extends Animal {
-  bark(): void;
+  breed: string;
 }
 
 // Type扩展type
@@ -619,7 +665,7 @@ type Animal = {
   name: string;
 }
 type Dog = Animal & {
-  bark(): void;
+  breed: string;
 }
 
 // Type可以扩展interface，interface也可以扩展type
@@ -627,14 +673,14 @@ interface Animal {
   name: string;
 }
 type Dog = Animal & {
-  bark(): void;
+  breed: string;
 }
 
 type Animal = {
   name: string;
 }
 interface Dog extends Animal {
-  bark(): void;
+  breed: string;
 }
 ```
 
@@ -809,10 +855,9 @@ function pair<T, U>(first: T, second: U): [T, U] {
 
 // 泛型约束中使用类型参数
 function copyFields<T extends U, U>(target: T, source: U): T {
-    for (let id in source) {
-        target[id] = source[id];
-    }
-    return target;
+    const existingRequired: number[] = Reflect.getOwnMetadata("required", target, propertyKey) || [];
+    existingRequired.push(parameterIndex);
+    Reflect.defineMetadata("required", existingRequired, target, propertyKey);
 }
 ```
 
@@ -845,7 +890,7 @@ type Pages = Record<'home' | 'about' | 'contact', PageInfo>;
 type TodoPreview = Pick<Todo, 'title' | 'completed'>;
 
 // Omit - 从类型中排除部分属性
-type TodoInfo = Omit<Todo, 'completed'>;
+type TodoWithoutDescription = Omit<Todo, 'description'>;
 
 // Readonly - 使所有属性只读
 type ReadonlyTodo = Readonly<Todo>;
@@ -2071,3 +2116,5 @@ TypeScript作为JavaScript的超集，通过其强大的类型系统和面向对
 - [TypeScript官方文档](https://www.typescriptlang.org/docs/)
 - [Vue + TypeScript](https://vuejs.org/guide/typescript/overview.html)
 - [React + TypeScript](https://create-react-app.dev/docs/adding-typescript/)
+
+```
