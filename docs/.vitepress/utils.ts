@@ -56,6 +56,10 @@ export default {
                 link:"/front/base/TS/"
               },
               {
+                text:'Redux入门及实践',
+                link:"/front/base/react/redux/"
+              },
+              {
                 text: "10分钟搭建一个属于自己的博客",
                 link: "/front/practice/blog/",
               },
