@@ -214,7 +214,87 @@ server {
 
 ### 资源压缩
 
-1. 开启GZIP
+- GZIP:
+
+1. 什么是Gzip
+
+   - Gzip是一种用于HTTP内容压缩的文件格式和压缩算法
+   - 可以将文件大小减少70-90%
+   - 特别适合压缩文本类文件(HTML、CSS、JavaScript等)
+   - 支持的文件格式包括.gz、.tar.gz、.tgz等
+2. Gzip原理
+   
+   - 服务器端：将数据进行压缩后再传输
+   - 客户端：接收到压缩数据后进行解压
+   - 属于HTTP压缩的一种实现方式(另一种常见的是deflate)
+
+   1. Webpack配置生成Gzip文件
+   ```js
+    const CompressionPlugin = require("compression-webpack-plugin");
+
+    module.exports = {
+     plugins: [
+     new CompressionPlugin({
+      algorithm: 'gzip', // 使用gzip压缩
+      test: /\.(js|css|html|svg)$/, // 压缩这些类型的文件
+      threshold: 10240, // 只压缩大于10kb的文件
+      minRatio: 0.8 // 只有压缩率小于这个值的资源才会被处理
+    })
+  ]
+    }
+  ```
+   1. Vite配置生成Gzip文件
+  ```js
+   import viteCompression from 'vite-plugin-compression'
+
+   export default {
+    plugins: [
+    viteCompression({
+      verbose: true, // 是否在控制台输出压缩结果
+      disable: false, // 是否禁用
+      threshold: 10240, // 体积大于阈值时才会被压缩，单位b，默认1025
+      algorithm: 'gzip', // 压缩算法，可选['gzip'，'brotliCompress'，'deflate'，'deflateRaw']
+      ext: '.gz', // 生成的压缩包后缀
+      deleteOriginFile: false // 是否删除原文件
+     })
+    ]
+  }
+  ```
+   1. ng上配置开启GZIP
+```nginx
+server {
+    # ... other configurations ...
+
+    gzip on;
+    gzip_comp_level 6;  # Compression level (1-9)
+    gzip_min_length 1000;  # Minimum length to trigger compression
+    gzip_types
+        text/plain
+        text/css
+        text/javascript
+        application/javascript
+        application/json
+        application/x-javascript
+        application/xml
+        application/xml+rss
+        application/vnd.ms-fontobject
+        application/x-font-ttf
+        application/x-font-opentype
+        application/x-font-truetype
+        image/svg+xml
+        image/x-icon
+        font/opentype;
+    gzip_proxied no-cache no-store private expired auth;
+    gzip_vary on;  # Adds "Vary: Accept-Encoding" response header
+    gzip_disable "MSIE [1-6]\.";  # Disable gzip for old IE versions
+}
+```
+
+- 代码混淆
+
+- 分包
+
+- Tree Shaking
 
 ## 页面渲染
 
