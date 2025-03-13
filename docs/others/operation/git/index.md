@@ -214,6 +214,14 @@ git add .
 git commit -m "更新 .gitignore"
 ```
 
+## 6. 设置git提交代理 - 解决github提交网络延时问题
+
+设置：git config --global https.https://github.com.proxy http://localhost:7890   （代理软件端口）
+
+移除：git config --global --unset https.https://github.com.proxy
+
+查询：git config --global --get https.https://github.com.proxy
+
 注意事项：
 - 在执行以上操作前，确保已经提交或备份了重要修改
 - 该操作会重新检查所有文件，可能会影响到其他协作者
