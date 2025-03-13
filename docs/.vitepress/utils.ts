@@ -81,10 +81,10 @@ export default {
                 text: "Uniapp对接微信原生SDK",
                 link: "/front/mini/thirdSDK/",
               },
-              {
-                text: "Uniapp踩坑合集",
-                link: "/front/mini/trap/",
-              },
+              // {
+              //   text: "Uniapp踩坑合集",
+              //   link: "/front/mini/trap/",
+              // },
             ],
           }
           

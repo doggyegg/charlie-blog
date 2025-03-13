@@ -148,7 +148,73 @@ ETag 的优先级高于 Last-Modified，同时存在时会优先使用 ETag。
 
 ## 网络
 
+从上述，URL请求过程我们可以看出，想减少网络请求的时间，我们主要可以从以下几个方面入手：
+
+### 1.缓存策略：
+
+- 在NG服务器上配置合理的缓存机制，减少静态资源的反复请求
+- 我们可以将所有的静态资源如JS,CSS等都设置为强缓存，过期时间可以设置为1年或者更长，这样可以充分利用浏览器的缓存机制
+- 我们将入口页，也就是index.html文件设置为no-store，也就是不缓存，用户每次刷新页面即可获取最新资源
+- 在项目重新打包上线时，通过修改index.html中引入资源的路径,比如后面加?时间戳，来实现，用户获取到最新的JS,CSS文件
+
+```nginx
+server {
+    location = /index.html {
+        add_header Cache-Control "no-store, no-cache, must-revalidate, max-age=0";
+        add_header Pragma "no-cache";
+        expires -1;
+    }
+    
+    location ~* \.(js|css)$ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        expires 1y;
+    }
+    
+}
+
+```
+![alt text](image-7.png)
+
+![alt text](image-8.png)
+
+### 2.IP协议升级
+
+- http1.0每次发送请求时，都会重新建立一个tcp连接，额外开销非常大
+- http1.1在http1.0的基础上实现tcp长连接，同一个tcp连接可以同时发送多个http请求，浏览器为统一域名会建立6-8个TCP连接，来同时并行处理请求，但是由于服务器必须按照请求顺序返回响应，所以一个请求的延迟会阻塞后续所有请求，从而造成队头阻塞问题
+- http2.0采用一个TCP连接处理同一域名下所有请求，大大减少建立连接浪费的时间，并且采用多路复用，每个请求和响应分配唯一的流ID，解决了队头阻塞问题
+- 当你的网站是单个资源较小，但是资源数量特别多的时候，从http1.1升级到2.0性能会有质的提升
+- 我们可以在NG服务器上将非http2的协议都升级到http2.0
+  
+```nginx
+server {
+    listen 443 ssl http2;
+    server_name example.com;
+    
+    ssl_certificate /path/to/certificate.crt;
+    ssl_certificate_key /path/to/private.key;
+    
+    # 其他SSL配置...
+}
+```
+
+![alt text](image-9.png)
+
+### 3.利用CDN加速静态资源
+
+- 原理：
+  - 用户访问网站时，DNS将请求引导至最近的CDN节点
+  - CDN节点检查是否有缓存资源，有则直接返回
+  - 若无缓存，则向源服务器请求资源，获取后缓存并返回给用户
+  - 后续用户访问同一资源时可直接从CDN节点获取
+- 将项目静态资源，如各类图片，ICON，三方JS库等等放到CDN服务器可以大大提升静态资源的访问速度
+
 ## 包体积
+
+如果说网络层面的优化是为了加速资源的请求效率，那么包体积的优化就是为了减少资源的大小，我们将从资源压缩，资源分包，无用资源优化等角度进行讲解
+
+### 资源压缩
+
+1. 开启GZIP
 
 ## 页面渲染
 
