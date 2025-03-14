@@ -212,9 +212,9 @@ server {
 
 如果说网络层面的优化是为了加速资源的请求效率，那么包体积的优化就是为了减少资源的大小，我们将从资源压缩，资源分包，无用资源优化等角度进行讲解
 
-### 资源压缩
+### GZIP压缩
 
-- GZIP:
+- GZIP：
 
 1. 什么是Gzip
 
@@ -229,6 +229,7 @@ server {
    - 属于HTTP压缩的一种实现方式(另一种常见的是deflate)
 
    1. Webpack配置生成Gzip文件
+   
    ```js
     const CompressionPlugin = require("compression-webpack-plugin");
 
@@ -240,10 +241,13 @@ server {
       threshold: 10240, // 只压缩大于10kb的文件
       minRatio: 0.8 // 只有压缩率小于这个值的资源才会被处理
     })
-  ]
+    ]
     }
-  ```
-   1. Vite配置生成Gzip文件
+
+    ```
+
+     2. Vite配置生成Gzip文件
+
   ```js
    import viteCompression from 'vite-plugin-compression'
 
@@ -260,7 +264,7 @@ server {
     ]
   }
   ```
-   1. ng上配置开启GZIP
+   3. ng上配置开启GZIP
 ```nginx
 server {
     # ... other configurations ...
@@ -290,16 +294,397 @@ server {
 }
 ```
 
-- 代码混淆
+#### 代码混淆
 
-- 分包
+代码混淆是前端性能优化和代码保护的重要手段。它通过将代码转换成功能上等价但难以理解和逆向工程的形式来实现。
 
-- Tree Shaking
+ 1. 混淆的主要方式
+
+- **变量和函数名混淆**: 将有意义的标识符替换为简短的字母或数字组合
+  ```js
+  // 混淆前
+  function calculateTotal(price, quantity) {
+    return price * quantity;
+  }
+  
+  // 混淆后
+  function a(b,c){return b*c}
+  ```
+
+- **字符串混淆**: 对字符串常量进行编码或加密
+- **控制流扁平化**: 重构代码的执行路径，使逻辑流程更难理解
+- **死代码注入**: 插入永远不会执行的代码干扰分析
+- **调试信息删除**: 移除源码映射、注释等调试相关信息
+
+ 2. 常用工具
+
+- **Terser**: webpack v4以上版本的默认压缩工具
+- **uglify-js**: 经典的JavaScript混淆和压缩工具
+- **javascript-obfuscator**: 功能强大的JavaScript混淆器
+
+ 3. webpack配置示例
+
+```js
+const TerserPlugin = require('terser-webpack-plugin');
+
+module.exports = {
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: true,  // 移除console
+            drop_debugger: true  // 移除debugger
+          },
+          mangle: true,         // 启用变量名混淆
+          output: {
+            comments: false     // 移除注释
+          }
+        }
+      })
+    ]
+  }
+};
+```
+
+ 4. Vite配置示例
+
+Vite在生产环境下默认使用Rollup构建，可以通过`build.minify`和`build.terserOptions`配置代码混淆：
+
+```js
+// vite.config.js
+export default defineConfig({
+  build: {
+    minify: 'terser',  // 使用terser进行混淆（默认为esbuild）
+    terserOptions: {
+      compress: {
+        drop_console: true,      // 移除console
+        drop_debugger: true,     // 移除debugger
+        pure_funcs: ['console.log'] // 移除指定函数
+      },
+      mangle: {
+        toplevel: true,          // 混淆顶级作用域的变量
+        safari10: true           // 兼容safari10
+      },
+      format: {
+        comments: false          // 移除注释
+      }
+    }
+  }
+})
+```
+
+如果使用esbuild（Vite默认），配置方式如下：
+
+```js
+// vite.config.js
+export default defineConfig({
+  build: {
+    minify: 'esbuild',
+    target: 'es2015',
+    terserOptions: undefined,    // 使用esbuild时需要移除terserOptions
+    rollupOptions: {
+      output: {
+        manualChunks: undefined  // 可选：配置代码分割策略
+      }
+    }
+  },
+  esbuild: {
+    drop: ['console', 'debugger'], // 移除console和debugger
+    minify: true,                  // 启用压缩
+    pure: ['console.log'],         // 移除指定函数调用
+    legalComments: 'none'          // 移除注释
+  }
+})
+```
+
+两种方案对比：
+- Terser：功能更丰富，混淆效果更好，但构建速度较慢
+- ESBuild：构建速度极快，但混淆选项相对较少
+
+5. 注意事项
+
+- 保留必要的变量名（如API接口名）
+- 合理配置sourcemap用于线上调试
+- 评估混淆带来的性能开销
+- 某些特殊场景（如eval）可能与混淆产生冲突
+
+### 分包
+
+分包（Code Splitting）是前端性能优化中的重要策略，通过将代码分割成多个较小的包，首屏只加载需要的资源、其它资源按需加载，我们熟知的路由懒以及小程序的主包子包加载其实本质上就是分包
+
+#### 1. 分包的主要方式
+
+- **入口点分割**: 通过配置多个入口来手动分割代码
+- **动态导入**: 使用`import()`语法实现按需加载
+- **公共依赖提取**: 将多个入口共用的依赖提取到单独的包中
+- **按路由分割**: 将不同路由的代码分割成独立的包
+
+#### 2. webpack分包配置
+
+```js
+// webpack.config.js
+module.exports = {
+  entry: {
+    main: './src/main.js',
+    admin: './src/admin.js'
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',      // 对所有chunk做分割
+      minSize: 20000,     // 生成chunk的最小大小
+      maxSize: 0,         // chunk的最大大小，0为不限制
+      minChunks: 1,       // 最少被引用次数
+      maxAsyncRequests: 30,  // 按需加载时的最大并行请求数
+      maxInitialRequests: 30, // 入口点的最大并行请求数
+      cacheGroups: {
+        defaultVendors: {  // 第三方库分包配置
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          reuseExistingChunk: true,
+          name: 'vendors'
+        },
+        default: {         // 默认分包配置
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    }
+  }
+};
+```
+
+#### 3. Vite分包配置
+
+```js
+// vite.config.js
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        admin: resolve(__dirname, 'admin.html')
+      },
+      output: {
+        manualChunks: {
+          // 将React相关库打包到一起
+          'react-vendor': ['react', 'react-dom'],
+          // 将所有node_modules下的模块打包到一起
+          'vendor': (id) => {
+            if (id.includes('node_modules')) {
+              return 'vendor'
+            }
+          }
+        }
+      }
+    }
+  }
+})
+```
+
+#### 4. 动态导入示例
+
+```js
+// React组件动态导入
+const AdminPanel = React.lazy(() => import('./AdminPanel'));
+
+// Vue组件动态导入
+const AdminPanel = () => import('./AdminPanel.vue')
+
+// 普通模块动态导入
+button.addEventListener('click', async () => {
+  const { default: module } = await import('./heavy-module.js');
+  module.doSomething();
+});
+```
+
+#### 5. 最佳实践
+
+- **合理的分包粒度**: 太小的包会增加HTTP请求数，太大的包会影响加载速度
+- **预加载关键路径**: 使用`<link rel="preload">`预加载重要资源
+- **延迟加载非关键资源**: 使用`import()`实现按需加载
+- **分析包大小**: 使用工具（如webpack-bundle-analyzer）分析并优化包大小
+- **缓存策略**: 合理配置长期缓存，利用contenthash
+- **并行加载**: 控制并行请求数，避免资源竞争
+
+### Tree Shaking
+
+Tree Shaking（摇树优化）是一种通过清除未使用代码（dead code）来优化打包结果的技术，它依赖于ES Module的静态结构特性。
+
+#### 1. 工作原理
+
+- **静态分析**: 基于ES Module的静态导入导出语法进行分析
+- **副作用判断**: 识别模块的副作用，决定是否可以安全移除
+- **依赖追踪**: 从入口文件开始，构建依赖树并标记使用的导出
+- **死代码消除**: 在最终打包时移除未使用的导出
+
+#### 2. webpack配置
+
+```js
+// webpack.config.js
+module.exports = {
+  mode: 'production',  // 生产模式默认启用 Tree Shaking
+  optimization: {
+    usedExports: true,    // 标记未使用的导出
+    minimize: true,       // 启用代码压缩
+    concatenateModules: true,  // 模块合并，提升Tree Shaking效果
+    sideEffects: true    // 启用副作用分析
+  }
+}
+```
+
+package.json配置：
+```json
+{
+  "name": "my-project",
+  "sideEffects": [
+    "*.css",
+    "*.scss",
+    "./src/some-side-effect-file.js"
+  ]
+}
+```
+
+#### 3. Vite配置
+
+```js
+// vite.config.js
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      treeshake: {
+        moduleSideEffects: false,  // 所有模块都没有副作用
+        propertyReadSideEffects: false,  // 属性读取没有副作用
+        tryCatchDeoptimization: false    // 优化try-catch块
+      }
+    }
+  },
+  esbuild: {
+    treeShaking: true  // 启用esbuild的tree shaking
+  }
+})
+```
+
+#### 4. 编写支持Tree Shaking的代码
+
+```js
+// 好的写法 - 命名导出
+export const add = (a, b) => a + b;
+export const subtract = (a, b) => a - b;
+
+// 不好的写法 - 默认导出对象
+export default {
+  add: (a, b) => a + b,
+  subtract: (a, b) => a - b
+};
+
+// 好的写法 - 按需导入
+import { Button } from 'antd';
+
+// 不好的写法 - 导入整个库
+import antd from 'antd';
+```
+
+#### 5. 常见问题和解决方案
+
+- **babel配置问题**
+```js
+// .babelrc
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "modules": false  // 保留ES模块语法，不转换为CommonJS
+    }]
+  ]
+}
+```
+
+- **第三方库优化**
+```js
+// 使用支持Tree Shaking的版本
+import { merge } from 'lodash-es';  // 而不是 import { merge } from 'lodash'
+
+// 使用babel-plugin-import实现按需加载
+{
+  "plugins": [
+    ["import", { 
+      "libraryName": "antd",
+      "style": "css"
+    }]
+  ]
+}
+```
 
 ## 页面渲染
 
-### 懒加载
+在优化完网络和包体积后，接下来需要优化的就是浏览器接受到资源后的渲染过程，根据前面讲过的浏览器的渲染流水线，我们大概了解了浏览器从解析html,css,js等静态资源生成位图的过程，那在这个过程中，我们能做的优化主要是以下几点：
 
-### 预加载
+### 提升渲染效率
+
+- 优先渲染视口内的内容
+  - **路由懒加载** - 前文已经提到
+  - **图片/视频懒加载**：图片src先为空，实际请求路径放到data-src，判断图片出现在视口，将data-src赋值给src, 判断视口可以使用IntersectionObserver
+  - **虚拟滚动**：类似表格的分页加载，将大量数据进行分布渲染，根据滚动条通过绝对定位的top,或者translateY来无限滚动，通过滚动条的位置计算当前需要渲染的数据的下标，保证dom层上面同时只有视口内的数据挂载
+- 尽量减少JS文件阻塞页面渲染
+  - 后置加载js文件，将js文件资源引入放到body之后，或者使用defer属性
+  - 复杂JS计算逻辑放到web-worker里进行，如大文件分片上传等等
+  - 尽量减少JS对Dom的操作频率，如react/vue的虚拟dom和diff算法
+  - 参考React-fiber架构思路，js执行为渲染让步
+- 减少浏览器重绘，重排的频率
+  - 重绘不一定重排，重排一定会重绘
+  - 不影响布局位置的，不会重排
+  - 使用 DocumentFragment 进行批量 DOM 修改，减少页面重排次数
+  - 缓存会触发重排的属性值(如 offsetTop、clientWidth)，避免频繁读取
+  - 使用 CSS class 替代多个 style 内联样式操作
+  - 使用 position: absolute/fixed 让元素脱离文档流，减少对其他元素的影响
+  - 使用 transform 替代 top/left 进行位置移动，因为 transform 不会触发重排
+  - 使用 opacity 替代 visibility，因为 opacity 只会触发重绘
+  - 避免使用 table 布局，table 中任何改动都会导致整个表格重新布局，考虑使用canvas绘制表格
+  - 优先使用 flex/grid 这样的现代布局方案
 
 ### SSR（服务端渲染）
+
+其实在前后端分离前，我们一直使用的就是SSR渲染，SSR渲染的本质就是所有的静态页面和动态数据（接口请求的数据）都在服务器上拼好，前端拿到的就是一个html文件，和传统的前后端分离项目比起来，节省了额外的接口请求时间以及请求过程中，数据变化导致浏览器反复重绘重排的时间
+
+#### 1. SSR的优势
+
+- **更快的首屏加载**：用户无需等待JavaScript bundle下载和执行就能看到页面内容
+- **更好的SEO**：搜索引擎可以直接爬取完整的HTML内容
+- **更好的性能体验**：特别是在低性能设备和弱网环境下
+
+#### 2. SSR的实现方案
+
+- **传统SSR**：
+  - 服务端直接输出HTML
+  - 适用于内容密集型网站
+  - 代表框架：PHP、Java模板引擎等
+
+- **同构SSR**：
+  - 一套代码同时运行在服务端和客户端
+  - 结合了SSR的优势和SPA的交互体验
+  - 代表框架：Next.js、Nuxt.js、Remix等
+
+#### 3. SSR性能优化要点
+
+- **服务端优化**：
+  - 使用缓存策略（页面缓存、组件缓存）
+  - 数据预取优化
+  - 采用流式渲染(Streaming SSR)
+  - 合理使用服务端组件
+
+- **客户端优化**：
+  - 合理的hydration策略
+  - 选择性hydration
+  - 代码分割和懒加载
+  - 预加载关键资源
+
+#### 4. SSR的成本和考虑因素
+
+- **服务器资源消耗**：需要更多的服务器资源
+- **开发复杂度**：需要考虑同构环境的差异
+- **缓存策略**：需要合理设计缓存方案
+- **部署难度**：需要合适的部署和运维方案
+
+
