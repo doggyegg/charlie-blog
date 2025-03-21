@@ -63,6 +63,10 @@ export default {
                 text: "10分钟搭建一个属于自己的博客",
                 link: "/front/practice/blog/",
               },
+              {
+                text:'做过的算法题合集',
+                link:'/front/base/math/'
+              }
              
             ],
           },
