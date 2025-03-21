@@ -56,6 +56,10 @@ export default {
                 link:"/front/base/TS/"
               },
               {
+                text:'前端常用设计模式',
+                link:'/front/base/designMode/'
+              },
+              {
                 text:'Redux入门及实践',
                 link:"/front/base/react/redux/"
               },
