@@ -179,10 +179,11 @@ export default {
       },
     ];
 
-    if (!path) {
-      return wholeList;
-    }
-
-    return wholeList.filter((list) => list.text === path)[0];
+    const map = {
+      front: wholeList[0].items,
+      back: wholeList[1].items,
+      others: wholeList[2].items,
+    };
+    return map[path] || [];
   },
 };
