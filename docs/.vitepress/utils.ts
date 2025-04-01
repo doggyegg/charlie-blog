@@ -69,7 +69,7 @@ export default {
               },
               {
                 text:'做过的算法题合集',
-                link:'/front/base/math/'
+                link:'/front/base/algorithm/'
               }
              
             ],

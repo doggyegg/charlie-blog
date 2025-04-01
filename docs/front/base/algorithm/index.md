@@ -341,4 +341,36 @@ const isValid = function (s) {
 
 ```
 
-## 9. 
+## 9. 冒泡排序
+
+### 题目描述
+
+通过冒泡排序的思路，对无序数组进行排序
+
+### 示例
+
+输入：[2,1,3,55,21]   输出：[1,2,3,21,55]
+
+### 答案
+
+```js
+function sortArr(arr) {
+    if (!Array.isArray(arr)) return arr;
+    const len = arr.length;
+    
+    for (let i = 0; i < len - 1; i++) {
+        let swapped = false;
+        // 注意这里的 len-i-1，因为后面i个元素已经排好序
+        for (let j = 0; j < len - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+                swapped = true;
+            }
+        }
+        // 如果没有发生交换，说明数组已经有序
+        if (!swapped) break;
+    }
+    
+    return arr;
+}
+```
