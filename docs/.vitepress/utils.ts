@@ -92,6 +92,10 @@ export default {
               {
                 text:'Uniapp开发App入门与实践',
                 link:'/front/mini/app/'
+              },
+              {
+                text:'App上架各应用市场攻略',
+                link:'/front/mini/publish'
               }
               // {
               //   text: "Uniapp踩坑合集",
