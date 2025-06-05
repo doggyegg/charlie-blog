@@ -58,11 +58,3 @@ function treeToFlat(treeData){
 console.log(treeToFlat(flatToTree(sourceData)));
 
 
-[{
-    id:1,
-    pid:null,
-    children:[{
-        id:11,
-        pid:1
-    }]
-}]
