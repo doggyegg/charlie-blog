@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>⏰ 每小时提醒</title>
+  <style>
+    body {
+      width: 320px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .toggle-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.3);
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .stats {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .stats-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .status-active {
+      background-color: #4CAF50;
+    }
+
+    .status-inactive {
+      background-color: #f44336;
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .save-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .save-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>⏰ 每小时提醒</h1>
+  </div>
+
+  <div class="card">
+    <div class="toggle-section">
+      <span>
+        <span id="statusIndicator" class="status-indicator"></span>
+        启用提醒
+      </span>
+      <label class="switch">
+        <input type="checkbox" id="enableToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-item">
+      <label for="intervalInput">提醒间隔（分钟）</label>
+      <input type="number" id="intervalInput" min="1" max="1440" value="60">
+    </div>
+
+    <div class="form-group">
+      <label for="titleInput">提醒标题</label>
+      <input type="text" id="titleInput" placeholder="健康提醒">
+    </div>
+
+    <div class="form-group">
+      <label for="messageInput">提醒内容</label>
+      <textarea id="messageInput" placeholder="该休息一下了！记得喝水、活动身体，保护视力哦～"></textarea>
+    </div>
+
+    <button id="saveBtn" class="save-btn">保存设置</button>
+  </div>
+
+  <div class="card stats">
+    <div class="stats-item">
+      <span>总提醒次数:</span>
+      <span id="totalReminders">0</span>
+    </div>
+    <div class="stats-item">
+      <span>最后提醒:</span>
+      <span id="lastReminder">从未</span>
+    </div>
+    <div class="stats-item">
+      <span>定时器状态:</span>
+      <span id="alarmStatus">未知</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

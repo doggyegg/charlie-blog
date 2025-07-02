@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "每小时提醒插件",
+  "version": "1.0",
+  "description": "每小时弹窗提醒，帮助你保持健康作息",
+  "permissions": [
+    "alarms",
+    "notifications",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "每小时提醒设置"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
