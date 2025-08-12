@@ -52,6 +52,10 @@ export default {
                 link: "/front/source/vue2/reactive/",
               },
               {
+                text:'Vue2源码之从编译角度看v-deep原理',
+                link:'/front/source/vue2/v-deep/'
+              },
+              {
                 text:'TS入门及实践',
                 link:"/front/base/TS/"
               },
