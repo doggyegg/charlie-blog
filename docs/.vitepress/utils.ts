@@ -68,6 +68,10 @@ export default {
                 link:"/front/base/react/redux/"
               },
               {
+                text:'浅析React的一些反直觉重新渲染',
+                link:'/front/base/react/reRender/'
+              },
+              {
                 text: "10分钟搭建一个属于自己的博客",
                 link: "/front/practice/blog/",
               },
