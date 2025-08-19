@@ -1,74 +1,72 @@
 # 浅析微前端常见方案
 
-## 引言
-
-随着前端应用规模的不断扩大和团队规模的增长，传统的单体前端应用架构逐渐暴露出诸多问题。微前端作为一种新兴的架构模式，为解决大型前端应用的复杂性提供了新的思路。本文将深入探讨微前端的核心概念、价值作用以及主流实现方案。
-
 ## 什么是微前端
+
+微前端（Micro-Frontends）是⼀种类似于微服务的架构体系，由独⽴交付的多个前端应⽤组成 
+整体的架构⻛格。简单来讲就是将不同的功能，不同的维度的多个前端项⽬（⼦应⽤） 通过主应⽤ 
+（基座）来聚合成⼀个整体应⽤,当路径切换时加载不同的⼦应⽤。这样各个前端应⽤都可以独⽴运 
+⾏、独⽴开发、独⽴部署，选⽤不同的技术栈。
+
+### 后端微服务架构
+
+![alt text](image.png)
+
+### 前端微前端架构
+
+![alt text](image-1.png)
 
 ### 单体应用的痛点
 
 在传统的单体前端应用中，随着业务的发展和功能的增加，我们经常会遇到以下问题：
 
-- **代码库庞大**：单一代码仓库包含所有功能模块，代码量急剧增长，维护困难
+- **代码库庞大**：单一代码仓库包含所有功能模块，代码量急剧增长，维护困难，且构建时间越来越长，开发体验下降
 - **技术栈锁定**：整个应用必须使用统一的技术栈，难以引入新技术或升级现有技术
 - **团队协作困难**：多个团队在同一个代码库中开发，容易产生代码冲突和依赖问题
-- **部署风险高**：任何一个模块的变更都需要重新构建和部署整个应用
-- **扩展性差**：随着功能增加，构建时间越来越长，开发体验下降
+- **部署风险高**：任何一个模块的变更都需要重新构建和部署整个应用，回滚和升级依赖都是问题
 
-### 微前端的核心思想
+### 微前端的项目优势
 
 微前端（Micro-Frontends）是一种类似于微服务的架构模式，其核心思想是**将单体前端应用拆分为多个独立的子应用**，每个子应用可以：
 
-- **独立开发**：不同团队可以独立开发各自负责的子应用
+- **独立开发**：不同团队可以独立仓库，独立开发和管理各自负责的子应用
 - **独立部署**：每个子应用可以独立构建、测试和部署
 - **技术栈无关**：不同子应用可以使用不同的技术栈（React、Vue、Angular等）
 - **运行时集成**：在浏览器中将多个子应用组合成一个完整的应用
 
-### 微前端的特点
+蚂蚁圆桌微前端的核心价值：https://www.yuque.com/kuitos/gky7yw/rhduwc
 
-1. **技术栈无关性**：每个子应用可以选择最适合的技术栈
-2. **独立开发部署**：子应用之间相互独立，互不影响
-3. **增量升级**：可以逐步迁移和升级现有应用
-4. **团队自治**：不同团队可以独立负责各自的子应用
+## 微前端的关键要素
 
-## 微前端的价值与作用
+### 路由拦截及解析
 
-### 解决大型项目的团队协作问题
+通过浏览器原生提供的hashChange和popState方案，分别对于hash路由及history路由进行劫持，然后逐级解析路由地址，去加载对应路由匹配到的子项目的资源以及生成对应子应用渲染的容器。
 
-在大型前端项目中，微前端架构能够有效解决团队协作问题：
+### 资源加载
 
-- **代码隔离**：每个团队维护独立的代码仓库，避免代码冲突
-- **责任边界清晰**：每个团队专注于自己的业务领域
-- **并行开发**：多个团队可以同时开发，提高整体开发效率
-- **减少沟通成本**：降低团队间的技术依赖和沟通成本
+在路由解析后，获取当前匹配到的子应用的资源路径，根据当前微前端基座所用的模块化加载分案去请求子应用的对应资源，一般直接请求的是子应用打包后的app.js等入口文件
 
-### 实现渐进式技术栈升级和重构
+### 分配容器及子项目运行时渲染
 
-微前端为技术栈升级提供了渐进式的解决方案：
+在入口文件加载完成后，父应用会去创建对应的HTML DOM容器去承载子应用的渲染，整个过程大致如下：
 
-- **逐步迁移**：可以逐个子应用进行技术栈升级，而不需要一次性重写整个应用
-- **新旧并存**：新功能可以使用新技术栈开发，老功能继续使用原有技术栈
-- **降低风险**：避免大规模重构带来的风险
-- **技术试验**：可以在新的子应用中试验新技术
+1. 父应用调浏览器原生的document.createElement生成一个container;
+2. 父组件去回调子组件入口文件暴露出的提前约定好的渲染函数（如乾坤的函数名叫mount,多点叫run），将生成的container作为回调函数的入参传入，具体怎么挂在和渲染由子应用自己实现，以此实现了不同技术栈的运行时集成。如Vue通过$mount挂载，React通过ReactDom.render挂载。JQ和原生则通过操作dom挂载等。
 
-### 提高开发效率和部署灵活性
+### JS隔离、CSS隔离
+在经过前面3个步骤后，当前路由匹配到的子应用已经成功被挂载到了父应用所在的Index.html上下文中，这个时候就会遇到2个最常见的问题，JS全局变量的冲突（如window上挂载的函数及变量）及CSS样式的冲突。
 
-微前端架构显著提升了开发和部署效率：
+JS的隔离方案一般是通过沙箱隔离，如乾坤的方案，代理window，给不同的子项目各自生成一个从window上拷贝下来的fake-window，在切换走的时候生成一个快照记录当前fake-window下挂载的数据和函数等，切回来的时候进行快照的还原。
 
-- **构建速度**：每个子应用独立构建，构建时间大幅缩短
-- **热更新快**：开发时只需要关注当前子应用，热更新速度更快
-- **独立发布**：可以独立发布某个子应用，不影响其他模块
-- **回滚简单**：出现问题时可以快速回滚单个子应用
+CSS隔离方案一般有3种：
+1. nameSpace-人为约定：如.micro-app1-xx,代表公司：多点、Single-SPA
+2. 运行时劫持Dom和Css样式：在运行时对子应用打上唯一标记，并且给其下的所有后代元素加上对应属性选择器，类似于Vue的scope实现，但是要复杂的多，因为Vue是编译时实现，而当前是运行时实现，代表公司：乾坤，京东（micro-app）
+3. 天然隔离，如IFrame, web-Component
 
-### 降低系统复杂度和维护成本
+### 父子应用及子应用之间的通信
 
-通过合理的架构设计，微前端能够降低系统整体复杂度：
-
-- **模块化管理**：将复杂的大应用拆分为多个简单的小应用
-- **职责单一**：每个子应用专注于特定的业务功能
-- **维护成本低**：小而专注的应用更容易理解和维护
-- **技术债务隔离**：某个子应用的技术债务不会影响其他子应用
+- 发布订阅模式：以父项目作为派发池，各个子项目在父项目提供的消息中心去订阅和发布消息
+- Iframe项目间通信使用浏览器原生提供的postMessage
+- 共享存储：LocalStorage、SessionStorage
 
 ## 主流微前端实现方案对比
 
@@ -275,53 +273,162 @@ const RemoteApp = React.lazy(() => import('mfReact/App'));
 ### Web Components
 
 #### 实现原理
-Web Components基于浏览器原生标准，通过Custom Elements、Shadow DOM、HTML Templates等技术实现组件化。
+Web Components 是浏览器原生提供的组件化解决方案，基于四个核心技术：Custom Elements（自定义元素）、Shadow DOM（影子DOM）、HTML Templates（HTML模板）和 HTML Imports（已废弃）。通过这些技术可以创建封装性良好的自定义元素，实现微前端架构。
 
 ```javascript
-// 定义Web Component
-class MicroApp extends HTMLElement {
+// 主应用 - 定义微前端容器组件
+class MicroFrontendApp extends HTMLElement {
   constructor() {
     super();
+    // 创建 Shadow DOM，实现样式和 DOM 隔离
     this.attachShadow({ mode: 'open' });
   }
   
   connectedCallback() {
+    const appUrl = this.getAttribute('app-url');
+    const appName = this.getAttribute('app-name');
+    
     this.shadowRoot.innerHTML = `
       <style>
-        /* 样式隔离 */
-        :host { display: block; }
+        :host {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+        .loading {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 200px;
+        }
+        .error {
+          color: red;
+          text-align: center;
+        }
       </style>
-      <div id="app"></div>
+      <div class="micro-app-container">
+        <div class="loading">加载中...</div>
+      </div>
     `;
     
-    // 加载并渲染子应用
-    this.loadApp();
+    this.loadMicroApp(appUrl, appName);
   }
   
-  loadApp() {
-    // 动态加载子应用代码
-    import('./sub-app.js').then(app => {
-      app.render(this.shadowRoot.querySelector('#app'));
+  async loadMicroApp(appUrl, appName) {
+    try {
+      // 动态加载子应用的入口文件
+      const response = await fetch(`${appUrl}/manifest.json`);
+      const manifest = await response.json();
+      
+      // 加载子应用的 JS 和 CSS
+      await this.loadResources(appUrl, manifest);
+      
+      // 渲染子应用
+      const container = this.shadowRoot.querySelector('.micro-app-container');
+      container.innerHTML = '<div id="micro-app-root"></div>';
+      
+      // 调用子应用的渲染方法
+      if (window[appName] && window[appName].render) {
+        window[appName].render(container.querySelector('#micro-app-root'));
+      }
+    } catch (error) {
+      this.shadowRoot.querySelector('.micro-app-container').innerHTML = 
+        `<div class="error">加载失败: ${error.message}</div>`;
+    }
+  }
+  
+  async loadResources(baseUrl, manifest) {
+    // 加载 CSS
+    for (const css of manifest.css || []) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = `${baseUrl}/${css}`;
+      this.shadowRoot.appendChild(link);
+    }
+    
+    // 加载 JS
+    for (const js of manifest.js || []) {
+      await this.loadScript(`${baseUrl}/${js}`);
+    }
+  }
+  
+  loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
     });
+  }
+  
+  disconnectedCallback() {
+    // 清理子应用
+    const appName = this.getAttribute('app-name');
+    if (window[appName] && window[appName].unmount) {
+      window[appName].unmount();
+    }
   }
 }
 
-customElements.define('micro-app', MicroApp);
+// 注册自定义元素
+customElements.define('micro-frontend-app', MicroFrontendApp);
 
-// 使用
-<micro-app src="https://sub-app.example.com"></micro-app>
+// 子应用 - React 应用示例
+// sub-app/src/index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+
+// 导出渲染和卸载方法供主应用调用
+window.ReactSubApp = {
+  render(container) {
+    ReactDOM.render(<App />, container);
+  },
+  
+  unmount(container) {
+    ReactDOM.unmountComponentAtNode(container);
+  }
+};
+
+// 子应用的 manifest.json
+{
+  "name": "react-sub-app",
+  "version": "1.0.0",
+  "css": ["static/css/main.css"],
+  "js": ["static/js/main.js"]
+}
+
+// 主应用中使用
+<micro-frontend-app 
+  app-url="http://localhost:3001" 
+  app-name="ReactSubApp">
+</micro-frontend-app>
+
+<micro-frontend-app 
+  app-url="http://localhost:3002" 
+  app-name="VueSubApp">
+</micro-frontend-app>
 ```
 
 #### 优点
-- **浏览器原生**：基于Web标准，无需额外框架
-- **天然隔离**：Shadow DOM提供完美的样式和DOM隔离
-- **标准化**：遵循Web标准，长期稳定
-- **轻量级**：无需引入额外的框架代码
+- **浏览器原生**：基于 Web 标准，无需额外框架依赖
+- **天然隔离**：Shadow DOM 提供完美的样式和 DOM 隔离
+- **标准化**：遵循 Web 标准，具有长期稳定性
+- **轻量级**：无需引入额外的微前端框架代码
+- **技术栈无关**：子应用可以使用任意技术栈开发
 
 #### 缺点
-- **浏览器兼容性**：老版本浏览器支持不完善
-- **生态不成熟**：相关工具和生态还在发展中
-- **开发体验**：开发工具支持相对较少
+- **浏览器兼容性**：IE 不支持，需要 polyfill
+- **生态不成熟**：相关工具和最佳实践还在发展中
+- **开发体验**：调试工具和开发工具支持相对较少
+- **通信复杂**：跨 Shadow DOM 的组件通信相对复杂
+
+#### 适用场景
+- 对浏览器兼容性要求不高的现代 Web 应用
+- 希望使用原生 Web 标准的项目
+- 需要强隔离性的微前端场景
+- 轻量级微前端解决方案
 - **学习成本**：需要学习Web Components相关标准
 
 #### 适用场景
@@ -329,127 +436,12 @@ customElements.define('micro-app', MicroApp);
 - 希望使用Web标准的项目
 - 需要长期稳定性的场景
 
-### EMP
 
-#### 实现原理
-EMP（Efficient Micro-frontend Platform）是字节跳动开源的微前端解决方案，基于Webpack 5 Module Federation构建，提供了完整的微前端开发工具链。
 
-```javascript
-// emp-config.js
-module.exports = {
-  name: 'main-app',
-  remotes: {
-    '@emp/react-app': 'http://localhost:3001/emp.js',
-    '@emp/vue-app': 'http://localhost:3002/emp.js',
-  },
-  shared: {
-    react: { singleton: true },
-    'react-dom': { singleton: true },
-  },
-};
 
-// 使用远程组件
-import RemoteComponent from '@emp/react-app/Component';
 
-function App() {
-  return (
-    <div>
-      <RemoteComponent />
-    </div>
-  );
-}
-```
 
-#### 优点
-- **开发体验好**：提供完整的开发工具链和脚手架
-- **性能优化**：基于Module Federation，支持依赖共享
-- **类型支持**：完善的TypeScript支持
-- **工程化完善**：集成了构建、部署、监控等工具
 
-#### 缺点
-- **相对较新**：生态和社区相对较小
-- **Webpack依赖**：依赖Webpack 5
-- **文档相对较少**：中文文档为主，国际化程度不高
 
-#### 适用场景
-- 字节跳动技术栈的项目
-- 需要完整工具链支持的团队
-- 对开发体验要求较高的项目
 
-## 技术难点与解决方案
 
-### 样式隔离
-
-**问题**：不同子应用的CSS样式可能相互冲突
-
-**解决方案**：
-- CSS Modules或Styled Components
-- Shadow DOM隔离
-- CSS命名空间
-- 运行时样式隔离（如qiankun的样式沙箱）
-
-### JS沙箱
-
-**问题**：子应用可能污染全局变量，影响其他应用
-
-**解决方案**：
-- Proxy沙箱：拦截全局变量访问
-- 快照沙箱：记录和恢复全局状态
-- 多实例沙箱：为每个应用创建独立的全局环境
-
-### 应用间通信
-
-**问题**：主应用与子应用、子应用之间需要数据交换
-
-**解决方案**：
-- Props传递：通过生命周期函数传递数据
-- 全局状态管理：Redux、Vuex等
-- 事件总线：自定义事件系统
-- 共享存储：LocalStorage、SessionStorage
-
-### 路由管理
-
-**问题**：多个应用的路由需要统一管理
-
-**解决方案**：
-- 主应用路由控制：主应用负责路由分发
-- 子应用路由独立：子应用内部路由自管理
-- 路由同步：保持浏览器地址栏与应用状态同步
-
-## 最佳实践与架构设计
-
-### 应用拆分原则
-
-1. **业务边界清晰**：按业务模块拆分，避免跨应用的强耦合
-2. **团队职责对应**：应用边界与团队职责边界对齐
-3. **技术栈考虑**：相同技术栈的模块可以考虑合并
-4. **部署频率**：部署频率相似的模块可以合并
-
-### 开发规范
-
-1. **统一的设计系统**：保持UI风格一致性
-2. **公共依赖管理**：合理共享公共库，避免重复打包
-3. **接口规范**：统一的API接口规范
-4. **错误处理**：统一的错误处理和上报机制
-
-### 性能优化
-
-1. **资源预加载**：预加载可能用到的子应用资源
-2. **公共依赖共享**：避免重复加载相同的依赖
-3. **懒加载**：按需加载子应用
-4. **缓存策略**：合理的缓存策略提升加载速度
-
-## 总结
-
-微前端作为一种新兴的架构模式，为解决大型前端应用的复杂性提供了有效的解决方案。不同的实现方案各有优缺点：
-
-- **iframe**适合快速集成和原型验证
-- **single-spa**适合需要精细控制的复杂场景
-- **qiankun**适合快速落地的企业级应用
-- **Module Federation**适合Webpack生态的现代应用
-- **Web Components**适合追求标准化的长期项目
-- **EMP**适合需要完整工具链的团队
-
-选择微前端方案时，需要综合考虑团队技术栈、项目复杂度、性能要求、维护成本等因素。微前端不是银弹，它解决了某些问题的同时也带来了新的复杂性。在实施微前端架构时，需要做好充分的技术调研和架构设计，确保方案的可行性和可维护性。
-
-随着前端技术的不断发展，微前端架构也在持续演进。未来，我们可以期待更加成熟的工具链、更好的开发体验，以及更完善的生态系统。对于前端开发者而言，理解和掌握微前端技术，将有助于应对日益复杂的前端应用开发挑战。
