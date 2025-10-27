@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas图片标注工具</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        flex-wrap: wrap;
+      }
+
+      .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+      }
+
+      .file-input {
+        position: absolute;
+        left: -9999px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .btn-primary {
+        background: #007bff;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #0056b3;
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #545b62;
+      }
+
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #c82333;
+      }
+
+      .btn.active {
+        background: #28a745;
+        color: white;
+      }
+
+      .mode-group {
+        display: flex;
+        gap: 5px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .mode-btn {
+        padding: 8px 12px;
+        background: white;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+
+      .mode-btn:hover {
+        background: #f8f9fa;
+      }
+
+      .mode-btn.active {
+        background: #007bff;
+        color: white;
+      }
+
+      .canvas-wrapper {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 500px;
+        background: #f8f9fa;
+        overflow: auto;
+      }
+
+      #canvas {
+        border: 1px solid #dee2e6;
+        cursor: crosshair;
+        background: white;
+      }
+
+      .placeholder {
+        text-align: center;
+        color: #6c757d;
+        font-size: 16px;
+      }
+
+      .status-bar {
+        padding: 10px 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+        font-size: 12px;
+        color: #6c757d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- 工具栏 -->
+      <div class="toolbar">
+        <!-- 上传图片 -->
+        <div class="file-input-wrapper">
+          <input
+            type="file"
+            id="imageInput"
+            class="file-input"
+            accept="image/*"
+          />
+          <label for="imageInput" class="btn btn-primary"> 上传图片 </label>
+        </div>
+
+        <!-- 标注模式 -->
+        <div class="mode-group">
+          <button class="mode-btn active" data-mode="rectangle">矩形框</button>
+          <button class="mode-btn" data-mode="circle">圆形框</button>
+          <button class="mode-btn" data-mode="freehand">自由画线</button>
+        </div>
+
+        <!-- 操作按钮 -->
+        <button class="btn btn-danger" id="clearBtn">清除标注</button>
+        <button class="btn btn-secondary" id="undoBtn">撤销</button>
+      </div>
+
+      <!-- 画布区域 -->
+      <div class="canvas-wrapper">
+        <canvas id="canvas" style="display: none"></canvas>
+        <div class="placeholder" id="placeholder">请先上传一张图片开始标注</div>
+      </div>
+
+      <!-- 状态栏 -->
+      <div class="status-bar">
+        <span id="statusText">就绪 - 请上传图片</span>
+      </div>
+    </div>
+
+    <script>
+      class ImageAnnotator {
+        constructor() {
+          this.canvas = document.getElementById("canvas");
+          this.ctx = this.canvas.getContext("2d");
+          this.placeholder = document.getElementById("placeholder");
+          this.statusText = document.getElementById("statusText");
+
+          // 状态变量
+          this.currentMode = "rectangle";
+          this.isDrawing = false;
+          this.startX = 0;
+          this.startY = 0;
+          this.currentImage = null;
+          this.annotations = [];
+          this.currentPath = [];
+
+          // 初始化事件监听
+          this.initEventListeners();
+        }
+
+        initEventListeners() {
+          // 图片上传
+          document
+            .getElementById("imageInput")
+            .addEventListener("change", (e) => {
+              this.loadImage(e.target.files[0]);
+            });
+
+          // 模式切换
+          document.querySelectorAll(".mode-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              this.setMode(e.target.dataset.mode);
+            });
+          });
+
+          // 清除和撤销
+          document.getElementById("clearBtn").addEventListener("click", () => {
+            this.clearAnnotations();
+          });
+
+          document.getElementById("undoBtn").addEventListener("click", () => {
+            this.undoLastAnnotation();
+          });
+
+          // Canvas鼠标事件
+          this.canvas.addEventListener("mousedown", (e) => this.onMouseDown(e));
+          this.canvas.addEventListener("mousemove", (e) => this.onMouseMove(e));
+          this.canvas.addEventListener("mouseup", (e) => this.onMouseUp(e));
+
+          // 防止右键菜单
+          this.canvas.addEventListener("contextmenu", (e) =>
+            e.preventDefault()
+          );
+        }
+
+        loadImage(file) {
+          if (!file || !file.type.startsWith("image/")) {
+            alert("请选择有效的图片文件");
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              this.currentImage = img;
+              this.setupCanvas(img);
+              this.updateStatus("图片加载完成 - 可以开始标注");
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+
+        setupCanvas(img) {
+          // 计算合适的画布尺寸
+          const maxWidth = 800;
+          const maxHeight = 600;
+          let { width, height } = img;
+
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height);
+            width *= ratio;
+            height *= ratio;
+          }
+
+          this.canvas.width = width;
+          this.canvas.height = height;
+          this.imageScale = width / img.width;
+
+          // 显示画布，隐藏占位符
+          this.canvas.style.display = "block";
+          this.placeholder.style.display = "none";
+
+          // 绘制图片和标注
+          this.redrawCanvas();
+        }
+
+        redrawCanvas() {
+          if (!this.currentImage) return;
+
+          // 清除画布
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+          // 绘制图片
+          this.ctx.drawImage(
+            this.currentImage,
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height
+          );
+
+          // 绘制所有标注
+          this.annotations.forEach((annotation) => {
+            this.drawAnnotation(annotation);
+          });
+        }
+
+        drawAnnotation(annotation) {
+          this.ctx.save();
+          this.ctx.strokeStyle = annotation.color || "#ff0000";
+          this.ctx.lineWidth = annotation.lineWidth || 2;
+          this.ctx.setLineDash(annotation.dash || []);
+
+          switch (annotation.type) {
+            case "rectangle":
+              this.ctx.strokeRect(
+                annotation.x,
+                annotation.y,
+                annotation.width,
+                annotation.height
+              );
+              break;
+
+            case "circle":
+              this.ctx.beginPath();
+              this.ctx.arc(
+                annotation.x,
+                annotation.y,
+                annotation.radius,
+                0,
+                2 * Math.PI
+              );
+              this.ctx.stroke();
+              break;
+
+            case "freehand":
+              if (annotation.points && annotation.points.length > 1) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(annotation.points[0].x, annotation.points[0].y);
+                for (let i = 1; i < annotation.points.length; i++) {
+                  this.ctx.lineTo(
+                    annotation.points[i].x,
+                    annotation.points[i].y
+                  );
+                }
+                this.ctx.stroke();
+              }
+              break;
+          }
+
+          this.ctx.restore();
+        }
+
+        setMode(mode) {
+          this.currentMode = mode;
+
+          // 更新按钮状态
+          document.querySelectorAll(".mode-btn").forEach((btn) => {
+            btn.classList.remove("active");
+          });
+          document
+            .querySelector(`[data-mode="${mode}"]`)
+            .classList.add("active");
+
+          // 更新光标样式
+          const cursors = {
+            rectangle: "crosshair",
+            circle: "crosshair",
+            freehand:
+              "url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='8' cy='8' r='2' fill='%23000'/></svg>\") 8 8, crosshair",
+          };
+          this.canvas.style.cursor = cursors[mode];
+
+          this.updateStatus(
+            `切换到${
+              mode === "rectangle"
+                ? "矩形框"
+                : mode === "circle"
+                ? "圆形框"
+                : "自由画线"
+            }模式`
+          );
+        }
+
+        getMousePos(e) {
+          const rect = this.canvas.getBoundingClientRect();
+          return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top,
+          };
+        }
+
+        onMouseDown(e) {
+          if (!this.currentImage) return;
+
+          const pos = this.getMousePos(e);
+          this.isDrawing = true;
+          this.startX = pos.x;
+          this.startY = pos.y;
+
+          if (this.currentMode === "freehand") {
+            this.currentPath = [{ x: pos.x, y: pos.y }];
+          }
+        }
+
+        onMouseMove(e) {
+          if (!this.isDrawing || !this.currentImage) return;
+
+          const pos = this.getMousePos(e);
+
+          if (this.currentMode === "freehand") {
+            this.currentPath.push({ x: pos.x, y: pos.y });
+            this.redrawCanvas();
+
+            // 绘制当前路径
+            if (this.currentPath.length > 1) {
+              this.ctx.save();
+              this.ctx.strokeStyle = "#ff0000";
+              this.ctx.lineWidth = 2;
+              this.ctx.beginPath();
+              this.ctx.moveTo(this.currentPath[0].x, this.currentPath[0].y);
+              for (let i = 1; i < this.currentPath.length; i++) {
+                this.ctx.lineTo(this.currentPath[i].x, this.currentPath[i].y);
+              }
+              this.ctx.stroke();
+              this.ctx.restore();
+            }
+          } else {
+            // 实时预览矩形框或圆形框
+            this.redrawCanvas();
+
+            this.ctx.save();
+            this.ctx.strokeStyle = "#ff0000";
+            this.ctx.lineWidth = 2;
+            this.ctx.setLineDash([5, 5]);
+
+            if (this.currentMode === "rectangle") {
+              const width = pos.x - this.startX;
+              const height = pos.y - this.startY;
+              this.ctx.strokeRect(this.startX, this.startY, width, height);
+            } else if (this.currentMode === "circle") {
+              const radius = Math.sqrt(
+                Math.pow(pos.x - this.startX, 2) +
+                  Math.pow(pos.y - this.startY, 2)
+              );
+              this.ctx.beginPath();
+              this.ctx.arc(this.startX, this.startY, radius, 0, 2 * Math.PI);
+              this.ctx.stroke();
+            }
+
+            this.ctx.restore();
+          }
+        }
+
+        onMouseUp(e) {
+          if (!this.isDrawing || !this.currentImage) return;
+
+          const pos = this.getMousePos(e);
+          this.isDrawing = false;
+
+          let annotation = null;
+
+          if (this.currentMode === "rectangle") {
+            const width = pos.x - this.startX;
+            const height = pos.y - this.startY;
+
+            if (Math.abs(width) > 5 && Math.abs(height) > 5) {
+              annotation = {
+                type: "rectangle",
+                x: Math.min(this.startX, pos.x),
+                y: Math.min(this.startY, pos.y),
+                width: Math.abs(width),
+                height: Math.abs(height),
+                color: "#ff0000",
+                lineWidth: 2,
+              };
+            }
+          } else if (this.currentMode === "circle") {
+            const radius = Math.sqrt(
+              Math.pow(pos.x - this.startX, 2) +
+                Math.pow(pos.y - this.startY, 2)
+            );
+
+            if (radius > 5) {
+              annotation = {
+                type: "circle",
+                x: this.startX,
+                y: this.startY,
+                radius: radius,
+                color: "#ff0000",
+                lineWidth: 2,
+              };
+            }
+          } else if (this.currentMode === "freehand") {
+            if (this.currentPath.length > 2) {
+              annotation = {
+                type: "freehand",
+                points: [...this.currentPath],
+                color: "#ff0000",
+                lineWidth: 2,
+              };
+            }
+          }
+
+          if (annotation) {
+            this.annotations.push(annotation);
+            this.updateStatus(
+              `添加了${
+                this.currentMode === "rectangle"
+                  ? "矩形"
+                  : this.currentMode === "circle"
+                  ? "圆形"
+                  : "自由线条"
+              }标注`
+            );
+          }
+
+          this.currentPath = [];
+          this.redrawCanvas();
+        }
+
+        clearAnnotations() {
+          this.annotations = [];
+          this.redrawCanvas();
+          this.updateStatus("已清除所有标注");
+        }
+
+        undoLastAnnotation() {
+          if (this.annotations.length > 0) {
+            this.annotations.pop();
+            this.redrawCanvas();
+            this.updateStatus("撤销了最后一个标注");
+          }
+        }
+
+        updateStatus(message) {
+          this.statusText.textContent = message;
+        }
+      }
+
+      // 初始化应用
+      document.addEventListener("DOMContentLoaded", () => {
+        new ImageAnnotator();
+      });
+    </script>
+  </body>
+</html>
