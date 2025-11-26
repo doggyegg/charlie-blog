@@ -51,6 +51,10 @@ export default {
                 link: "/front/source/vue2/reactive/",
               },
               {
+                text: "React的渲染机制及对应优化手段",
+                link: "/front/source/react/render/",
+              },
+              {
                 text: "Vue2源码之从编译角度看v-deep原理",
                 link: "/front/source/vue2/v-deep/",
               },
@@ -66,10 +70,10 @@ export default {
                 text: "Redux入门及实践",
                 link: "/front/base/react/redux/",
               },
-              {
-                text: "浅析React的一些反直觉重新渲染",
-                link: "/front/base/react/reRender/",
-              },
+              // {
+              //   text: "浅析React的一些反直觉重新渲染",
+              //   link: "/front/base/react/reRender/",
+              // },
               {
                 text: "10分钟搭建一个属于自己的博客",
                 link: "/front/practice/blog/",
