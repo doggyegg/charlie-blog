@@ -478,7 +478,9 @@
     if (bailRE.test(path)) {
       return;
     }
+    // 通过闭包保留了segments不被销毁，后续还能用
     var segments = path.split(".");
+    // 这里在外部调用this.getter时，传入的obj就是vm
     return function (obj) {
       for (var i = 0; i < segments.length; i++) {
         if (!obj) return;
@@ -1913,6 +1915,7 @@
     return _createElement(context, tag, data, children, normalizationType);
   }
   // render函数中调用，返回值是vnode,
+  // context是在$createElement中传入的当前vm , tag开始是由render函数中的h函数传入的
   function _createElement(context, tag, data, children, normalizationType) {
     if (isDef(data) && isDef(data.__ob__)) {
       warn$2(
@@ -2730,6 +2733,8 @@
     Vue.prototype._render = function () {
       var vm = this;
       var _a = vm.$options,
+        // 这里的render是可以来自 手动写一个render，然后将createElement作为h函数传入
+        // 也可以是来自vue-loader将template编译成render函数
         render = _a.render,
         _parentVnode = _a._parentVnode;
       if (_parentVnode && vm._isMounted) {
@@ -4562,6 +4567,8 @@
       try {
         // renderWatcher的话，在此调的vm._update(vm_render()) render里会读data或props的各个key，
         // 从而各个key的dep中持有了renderWatcher
+
+        // 普通watcher这里的getter是parsePath返回的函数，本质上是访问vm.a.b.c这种
         value = this.getter.call(vm, vm);
       } catch (e) {
         if (this.user) {
@@ -4600,7 +4607,7 @@
     };
     /**
      * Clean up for dependency collection.
-     * 通知所有收集了该依赖的dep清除这个watcher
+     * 通知所有收集了该依赖的dep清除这一轮没用到的watchers
      */
     Watcher.prototype.cleanupDeps = function () {
       var i = this.deps.length;
@@ -4881,6 +4888,7 @@
       // component prototype. We only need to define computed properties defined
       // at instantiation here.
       if (!(key in vm)) {
+        // userDef就是computed.xx 里的那个函数
         defineComputed(vm, key, userDef);
       } else {
         if (key in vm.$data) {
@@ -4911,7 +4919,7 @@
       }
     }
   }
-  // target:vm实例  key:computed中对应的key,userDef:computed中对应的值
+  // target:vm实例  key:computed中对应的key,userDef:computed中对应的函数
   function defineComputed(target, key, userDef) {
     var shouldCache = !isServerRendering();
     if (isFunction(userDef)) {
@@ -4938,11 +4946,13 @@
         );
       };
     }
-    // 单独对computed的key做代理，在这做依赖收集
+    // 单独对computed的key做代理，sharedPropertyDefinition上的get，对应的是将lazyWatcher的dirty标记为false,并且调watch的.get函数收集依赖
     Object.defineProperty(target, key, sharedPropertyDefinition);
   }
+  // 给computed中的key做getter代理
   function createComputedGetter(key) {
     return function computedGetter() {
+      // 这里的watcher是在initComputed的时候 new了lazyWatcher但是没有调this.get()去立即收集依赖的watch
       var watcher = this._computedWatchers && this._computedWatchers[key];
       if (watcher) {
         if (watcher.dirty) {
