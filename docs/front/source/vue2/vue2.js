@@ -1115,8 +1115,10 @@
         } else {
           val = newVal;
         }
+        // 给为引用数据类型的新值设置响应式，如原来为vm.x =1 ; 改为vm.x = {a:1}，给{a:1}设置响应式
         childOb = !shallow && observe(newVal, false, mock);
         {
+          // 通知dep中的watcher更新,执行每个watcher的update函数，放入nextTick中，在下一轮事件循环中执行
           dep.notify({
             type: "set" /* TriggerOpTypes.SET */,
             target: obj,
@@ -5028,6 +5030,7 @@
     if (typeof handler === "string") {
       handler = vm[handler];
     }
+
     return vm.$watch(expOrFn, handler, options);
   }
   function stateMixin(Vue) {
@@ -6916,7 +6919,6 @@
     node.removeChild(child);
   }
   function appendChild(node, child) {
-    debugger;
     node.appendChild(child);
   }
   function parentNode(node) {
@@ -10746,7 +10748,6 @@
    * Convert HTML string to AST.
    */
   function parse(template, options) {
-    debugger;
     warn = options.warn || baseWarn;
     platformIsPreTag = options.isPreTag || no;
     platformMustUseProp = options.mustUseProp || no;
