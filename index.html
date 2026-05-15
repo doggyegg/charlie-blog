@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div style="width: 200px;height: 1200px;overflow: scroll;background-color: red;">
+         <div style="width: 200px;height: 2000px;background-color: blue;"></div>
+    </div>
+</body>
+<script>
+    const div = document.querySelector('div');
+    div.addEventListener('scroll', () => {
+        console.log('scrollTop',div.scrollTop,'scrollHeight',div.scrollHeight,'clientHeight',div.clientHeight);
+    });
+</script>
+</html>

@@ -75,16 +75,12 @@ export default {
               //   link: "/front/base/react/reRender/",
               // },
               {
-                text: "10分钟搭建一个属于自己的博客",
-                link: "/front/practice/blog/",
-              },
-              {
                 text: "做过的算法题合集",
                 link: "/front/base/algorithm/",
               },
             ],
           },
-          {
+            {
             text: "Uniapp跨端开发",
             items: [
               {
@@ -109,6 +105,20 @@ export default {
               },
             ],
           },
+          {
+            text: "业务实战",
+            items: [
+              {
+                text: "10分钟搭建一个属于自己的博客",
+                link: "/front/practice/blog/",
+              },
+              {
+                text: "前端地图入门指南",
+                link: "/front/practice/map/",
+              },
+            ],
+          },
+        
         ],
       },
       {
@@ -141,6 +151,10 @@ export default {
               {
                 text: "MySql入门与实践",
                 link: "/back/framework/mysql",
+              },
+              {
+                text: "从JS视角极速重构Java认知",
+                link: "/back/framework/java/",
               },
             ],
           },
